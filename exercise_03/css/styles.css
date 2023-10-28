@@ -1,0 +1,95 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+:root {
+	--clr-red: #f68e8d;
+	--clr-blue: #8d92ee;
+	--clr-green: #a4ff96;
+	--clr-yellow: #ffff8d;
+	--clr-orange: #ffc19c;
+	--clr-pink: #f8a3ff;
+}
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+}
+
+#app {
+	width: 800px;
+	height: 100%;
+	margin: 0 auto;
+
+	display: grid;
+	gap: 10px;
+
+	grid-template-areas:
+		"header-a header-a header-a header-a"
+		"header-a header-a header-a header-a"
+		"header-b header-b header-b header-b"
+		"aside article-a article-a article-a"
+		"aside article-a article-a article-a"
+		"aside article-a article-a article-a"
+		"aside article-a article-a article-a"
+		"aside article-a article-a article-a"
+		"aside article-a article-a article-a"
+		"aside article-a article-a article-a"
+		"aside article-a article-a article-a"
+		"aside article-b article-b article-b"
+		"aside article-b article-b article-b"
+		"footer footer footer footer";
+}
+
+body {
+	min-height: 100svh;
+	padding: 10px;
+}
+
+#header-a {
+	background-color: var(--clr-red);
+}
+#header-b {
+	background-color: var(--clr-blue);
+}
+aside {
+	background-color: var(--clr-green);
+}
+#article-a {
+	background-color: var(--clr-yellow);
+}
+#article-b {
+	background-color: var(--clr-orange);
+}
+footer {
+	background-color: var(--clr-pink);
+}
+
+#header-a {
+	grid-area: header-a;
+}
+
+#header-b {
+	grid-area: header-b;
+}
+
+aside {
+	grid-area: aside;
+}
+
+#article-a {
+	grid-area: article-a;
+}
+
+#article-b {
+	grid-area: article-b;
+}
+
+footer {
+	grid-area: footer;
+}
