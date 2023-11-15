@@ -1,5 +1,5 @@
 <script lang="ts">
-  console.log("Hello World!");
+    console.log("Hello World!");
 </script>
 
 <main></main>
