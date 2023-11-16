@@ -1,10 +1,6 @@
-<script lang="ts">
-  import { fade } from 'svelte/transition';
+<script lang="ts"></script>
 
-  export const dimensions = 80;
-</script>
-
-<div class="container">
+<div class="container flex flex-col justify-center items-center">
   <div class="slice"></div>
   <div class="slice"></div>
   <div class="slice"></div>
@@ -17,13 +13,15 @@
   // Credits: https://uiball.com/ldrs/
 
   .container {
-    --uib-size: 45px;
-    --uib-color: black;
+    --uib-size: 90px;
+    --uib-color: white;
     --uib-speed: 2.5s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99;
     height: var(--uib-size);
     width: var(--uib-size);
   }
@@ -38,6 +36,7 @@
   .slice::after {
     --uib-a: calc(var(--uib-speed) / -2);
     --uib-b: calc(var(--uib-speed) / -6);
+
     content: '';
     position: absolute;
     top: 0;

@@ -102,7 +102,7 @@
   {
     "name": "Tyrannosaurus rex",
     "cardNumber": 1,
-    "group": "Big Predatory Theropods",
+    "group": "Big Theropods",
     "groupLetter": "B",
     "years": 68,
     "territorialRange": 500,
@@ -127,7 +127,7 @@
   {
     "name": "Baryonyx",
     "cardNumber": 2,
-    "group": "Big Predatory Theropods",
+    "group": "Big Theropods",
     "groupLetter": "B",
     "years": 125,
     "territorialRange": 300,
@@ -152,7 +152,7 @@
   {
     "name": "Allosaurus",
     "cardNumber": 3,
-    "group": "Big Predatory Theropods",
+    "group": "Big Theropods",
     "groupLetter": "B",
     "years": 155,
     "territorialRange": 400,
@@ -177,7 +177,7 @@
   {
     "name": "Spinosaurus",
     "cardNumber": 4,
-    "group": "Big Predatory Theropods",
+    "group": "Big Theropods",
     "groupLetter": "B",
     "years": 95,
     "territorialRange": 600,
@@ -702,7 +702,7 @@
   {
     "name": "Triceratops",
     "cardNumber": 1,
-    "group": "Ceratopsians and Co.",
+    "group": "Ceratopsians",
     "groupLetter": "H",
     "years": 66,
     "territorialRange": 200,
@@ -727,7 +727,7 @@
   {
     "name": "Styracosaurus",
     "cardNumber": 2,
-    "group": "Ceratopsians and Co.",
+    "group": "Ceratopsians",
     "groupLetter": "H",
     "years": 70,
     "territorialRange": 180,
@@ -752,7 +752,7 @@
   {
     "name": "Pachycephalosaurus",
     "cardNumber": 3,
-    "group": "Ceratopsians and Co.",
+    "group": "Ceratopsians",
     "groupLetter": "H",
     "years": 68,
     "territorialRange": 100,
@@ -777,7 +777,7 @@
   {
     "name": "Protoceratops",
     "cardNumber": 4,
-    "group": "Ceratopsians and Co.",
+    "group": "Ceratopsians",
     "groupLetter": "H",
     "years": 75,
     "territorialRange": 80,

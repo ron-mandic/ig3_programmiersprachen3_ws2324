@@ -195,6 +195,17 @@
       outline: 2px solid var(--tint-3, rgb(216, 216, 216));
       border-radius: clamp(0.5rem, 5vw, 1rem);
     }
+
+    &::after {
+      content: "©2023 HfG - Prehistoric Battle Quartet Cards";
+      position: absolute;
+      left: 50%;
+      bottom: .175%;
+      translate: -50%;
+      font-size: 25%;
+      color: var(--tint-3, rgb(216, 216, 216));
+      font-weight: normal;
+    }
   }
 
   /* card-header ########################################################### */
