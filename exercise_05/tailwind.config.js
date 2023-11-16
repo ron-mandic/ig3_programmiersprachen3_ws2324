@@ -17,6 +17,12 @@ export default {
         ".font-heading": {
           fontFamily: `"Luckiest Guy", cursive`,
         },
+        ".max-w-screen-fhd": {
+          maxWidth: "1920px",
+        },
+        ".m-0-auto": {
+          margin: "0 auto",
+        },
       });
     }),
   ],

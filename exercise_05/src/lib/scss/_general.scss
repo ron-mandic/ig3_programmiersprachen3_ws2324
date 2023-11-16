@@ -2,6 +2,17 @@
   outline: 1px solid red;
 }
 
+:root {
+	color-scheme: light dark;
+
+	line-height: normal;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
 *,
 *::before,
 *::after {

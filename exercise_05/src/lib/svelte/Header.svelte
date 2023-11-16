@@ -1,5 +1,5 @@
 <script lang="ts"></script>
 
-<p>Header</p>
+<header></header>
 
 <style lang="scss"></style>

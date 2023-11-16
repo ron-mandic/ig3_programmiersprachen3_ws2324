@@ -1,5 +1,5 @@
 <script lang="ts"></script>
 
-<p>Footer</p>
+<footer></footer>
 
 <style lang="scss"></style>
