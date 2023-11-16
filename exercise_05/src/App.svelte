@@ -1,7 +1,11 @@
 <script lang="ts">
-  console.log("Hello World!");
+    import Header from "./lib/svelte/Header.svelte";
+    import Main from "./lib/svelte/Main.svelte";
+    import Footer from "./lib/svelte/Footer.svelte";
 </script>
 
-<main></main>
+<Header/>
+<Main/>
+<Footer/>
 
 <style lang="scss"></style>
