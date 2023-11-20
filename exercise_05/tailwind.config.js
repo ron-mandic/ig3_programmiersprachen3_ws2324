@@ -16,6 +16,10 @@ export default {
       addUtilities({
         ".font-heading": {
           fontFamily: `"Luckiest Guy", cursive`,
+          lineHeight: "normal",
+        },
+        ".font-body": {
+          fontFamily: `"Lato", sans-serif`,
         },
         ".max-w-screen-fhd": {
           maxWidth: "1920px",

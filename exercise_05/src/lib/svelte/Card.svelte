@@ -4,7 +4,7 @@
   import { format } from "../ts/functions";
 
   function handleClick(_: MouseEvent) {
-    console.log("Clicked on card");
+    console.log(name);
   }
 
   export let content: IData;
@@ -29,7 +29,7 @@
 
   const {
     bg: hasBackgroundImage,
-    mg: hasMiddleGroundImage,
+    mg: hasMiddlegroundImage,
     fg: hasForegroundImage
   } = dictDinosaurImages[name as keyof typeof dictDinosaurImages];
 
@@ -60,7 +60,7 @@
       </div>
     </div>
     <!-- <mg> -->
-    {#if hasMiddleGroundImage}
+    {#if hasMiddlegroundImage}
       <div
         class="card-overlay"
         style="--url: url('src/assets/webp/{name}.webp')"
@@ -190,6 +190,7 @@
     overflow: hidden;
     user-select: none;
     cursor: pointer;
+    transition: scale 0.5s ease-in;
 
     &:focus {
       outline: 2px solid var(--tint-3, rgb(216, 216, 216));
@@ -205,6 +206,16 @@
       font-size: 25%;
       color: var(--tint-3, rgb(216, 216, 216));
       font-weight: normal;
+    }
+
+    &:hover {
+      scale: .9875;
+      transition: scale 0.25s cubic-bezier(0.47, 0, 0.745, 0.715);
+
+      [class*="card-overlay"]{
+        translate: -50% -49%;
+        transition: translate 0.25s cubic-bezier(0.47, 0, 0.745, 0.715);
+      }
     }
   }
 
@@ -231,6 +242,7 @@
   .card-header .left {
     flex: 0 0 70%;
     justify-content: flex-start;
+    flex-grow: 2;
   }
 
   .card-header .right {
@@ -269,7 +281,7 @@
     --g: url("src/assets/svg/g.svg");
     --h: url("src/assets/svg/h.svg");
 
-    width: 25%;
+    min-width: 25%;
     aspect-ratio: 1 / 1;
     border-radius: 100%;
     background-color: var(--tint-3, rgb(46, 46, 46));
@@ -333,6 +345,7 @@
     pointer-events: none;
     filter: brightness(1.75); /*  blur(5px) */
     /* transition: filter 1.5s ease-in-out; */
+    transition: translate 0.375s cubic-bezier(0.47, 0, 0.745, 0.715);
   }
 
   /* .card-overlay:hover {
@@ -357,6 +370,7 @@
     background-color: var(--tint-3, rgb(46, 46, 46));
     border-radius: clamp(0.5rem, 5vw, 0.75rem);
     border-top: 1px solid var(--tint-1, rgb(54, 54, 54));
+    transition: scale 0.125s cubic-bezier(0.47, 0, 0.745, 0.715);
   }
 
   .card-body::after {

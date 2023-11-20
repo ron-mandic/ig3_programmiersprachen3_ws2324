@@ -1,6 +1,12 @@
-<script lang="ts"></script>
+<script lang="ts">
+	import { fly } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+</script>
 
-<div class="container flex flex-col justify-center items-center">
+<div
+  class="container flex flex-col justify-center items-center"
+  out:fly={{ duration: 500, y: -50, opacity: 0, easing: quintOut }}
+  >
   <div class="slice"></div>
   <div class="slice"></div>
   <div class="slice"></div>
@@ -13,7 +19,7 @@
   // Credits: https://uiball.com/ldrs/
 
   .container {
-    --uib-size: 90px;
+    --uib-size: 7vmax;
     --uib-color: white;
     --uib-speed: 2.5s;
 
