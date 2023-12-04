@@ -38,10 +38,7 @@ nav ul li a {
 <header>
   <div class="container flex justify-between items-center">
     <a id="logo" href="#">
-      <img
-        src="src/assets/svg/icon-bite-force.svg"
-        alt="Prehistoric Battle - Logo"
-      />
+      <img src="/svg/icon-bite-force.svg" alt="Prehistoric Battle - Logo" />
     </a>
 
     <nav>
