@@ -7,6 +7,7 @@
     "dev": "vite --open",
     "build": "vite build",
     "preview": "vite preview",
+    "prettify": "prettier --write .",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
@@ -14,6 +15,8 @@
     "@tsconfig/svelte": "^5.0.0",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
+    "prettier": "^3.1.0",
+    "prettier-plugin-svelte": "^3.1.2",
     "sass": "^1.69.5",
     "svelte": "^4.0.5",
     "svelte-check": "^3.4.6",
