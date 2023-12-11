@@ -3,9 +3,6 @@
 main {
   min-height: 100svh;
 }
-#grid {
-  grid-template-columns: 1fr;
-}
 
 section#landing {
   width: 100%;
@@ -58,24 +55,9 @@ button#cta {
     display: none;
   }
 }
-@media (min-width: 554px) {
-  #grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 @media (min-width: 768px) {
   h1 {
     font-size: clamp(3.75rem, 8vw, 6rem);
-  }
-}
-@media (min-width: 1024px) {
-  #grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media (min-width: 1440px) {
-  #grid {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>
@@ -83,14 +65,15 @@ button#cta {
 <script>
 import { fly } from "svelte/transition";
 import { quintOut } from "svelte/easing";
-import Card from "./Card.svelte";
 import Loader from "./Loader.svelte";
 import { delay, random } from "../ts/functions";
+import { DINO_DATA_PATH } from "../ts/constants";
+import CardStack from "./CardStack.svelte";
 
 let jsonData = (async () => {
   await delay(random(2000, 3000));
 
-  const response = await fetch("src/api/dinosaurs.json");
+  const response = await fetch(DINO_DATA_PATH);
   return await response.json();
 })();
 </script>
@@ -98,17 +81,17 @@ let jsonData = (async () => {
 <main class="w-full h-full">
   {#await jsonData}
     <Loader />
-  {:then data}
+  {:then cards}
     <section
       id="landing"
       class="flex flex-col justify-center items-start"
-      transition:fly="{{
+      transition:fly={{
         delay: 150,
         duration: 1500,
         y: 100,
         opacity: 0,
         easing: quintOut,
-      }}"
+      }}
     >
       <h1 class="font-heading text-lg">Prehistoric Battle</h1>
       <p class="text-base font-body">
@@ -117,21 +100,7 @@ let jsonData = (async () => {
       </p>
       <button id="cta">Buy now!</button>
     </section>
-    <ul
-      id="grid"
-      class="grid w-full h-full list-none max-w-screen-fhd m-0-auto p-[1rem] gap-[1.5rem]"
-      transition:fly="{{
-        delay: 250,
-        duration: 1300,
-        y: 100,
-        opacity: 0,
-        easing: quintOut,
-      }}"
-    >
-      {#each data as dino}
-        <Card content="{dino}" />
-      {/each}
-    </ul>
+    <CardStack {cards} />
   {:catch error}
     <p>{error.message}</p>
   {/await}
