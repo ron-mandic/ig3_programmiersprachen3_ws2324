@@ -42,7 +42,7 @@
 			delay: random(250, 500),
 			duration: 500,
 			x: 0,
-			y: 20,
+			y: random(20, 40),
 			easing: quintOut
 		}}
 	>
@@ -52,7 +52,11 @@
 		<div class="card__body relative w-full h-full flex items-between justify-center flex-col">
 			<div class="cb__top relative">
 				<div class="cbt__image relative w-full h-full">
-					<img class="absolute" src={sprites.other['official-artwork'].front_default} alt={id} />
+					<img
+						class="absolute scale-90"
+						src={sprites.other['official-artwork'].front_default}
+						alt={id}
+					/>
 				</div>
 				<div class="cbt__types">
 					{#each types as { type }, i}
@@ -95,7 +99,31 @@
 		</div>
 	</div>
 {:catch error}
-	<p>{error.message}</p>
+	<div class="card relative w-full h-full mask">
+		<div class="card__body relative w-full h-full flex items-between justify-center flex-col">
+			<div class="cb__top relative">
+				<div class="cbt__image relative w-full h-full flex items-center justify-center">
+					<img
+						class="absolute opacity-5 dark:opacity-30 invert-0 scale-50"
+						src="/svg/icon-error.svg"
+						alt="Error"
+					/>
+				</div>
+			</div>
+			<div class="cb__bottom">
+				<div class="cbb__layout w-full h-full">
+					<div class="cbb__body">
+						<div class="row">
+							<div class="col">
+								<h3 class="cbbb__head">Pika-pi?</h3>
+								<p class="cbbb__body" style="margin-top: 7%;">{error.message}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {/await}
 
 <style lang="scss">

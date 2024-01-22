@@ -2,13 +2,11 @@
 	import '$lib/scss/styles.scss';
 	import Header from '$lib/svelte/Header.svelte';
 	import Main from '$lib/svelte/Main.svelte';
-
-	export const trailingSlash = 'always';
 </script>
 
 <svelte:head>
-	<title>/</title>
-	<meta name="description" content="/" />
+	<title>HfG-Pokémon - /</title>
+	<meta name="description" content="HfG-Pokémon - /" />
 </svelte:head>
 
 <div id="app">

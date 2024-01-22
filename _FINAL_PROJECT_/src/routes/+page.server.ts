@@ -5,16 +5,14 @@ import type { PageServerLoad, PageServerLoadEvent } from './$types';
 export const load: PageServerLoad = async ({ fetch, url }: PageServerLoadEvent) => {
 	try {
 		let apiUrl = BASE_URL + EEndpoints.POKEMON;
-		const urlLimit = url.searchParams.get('limit');
+		const apiUrlLimit = url.searchParams.get('limit');
 
-		if (urlLimit) {
-			apiUrl += `?limit=${urlLimit}`;
+		if (apiUrlLimit) {
+			apiUrl += `?limit=${apiUrlLimit}`;
 		}
 
-		const response = await fetch(apiUrl);
-
 		return {
-			body: response.json()
+			body: (await fetch(apiUrl)).json()
 		};
 	} catch (error) {
 		console.error(error);

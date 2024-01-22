@@ -71,8 +71,9 @@ export function delay<T>(ms: number, value?: T): Promise<unknown> | Promise<T> {
 			);
 }
 
-export async function get(url: string) {
+export async function get(url: string, ms?: number) {
 	const response = await fetch(url);
+	if (ms) await delay(ms);
 	return response.json();
 }
 

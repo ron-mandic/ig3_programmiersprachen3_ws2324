@@ -41,6 +41,10 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"normalize.css": "^8.0.1"
+		"clsx": "^2.1.0",
+		"lucide-svelte": "^0.314.0",
+		"normalize.css": "^8.0.1",
+		"tailwind-merge": "^2.2.1",
+		"tailwind-variants": "^0.1.20"
 	}
 }
