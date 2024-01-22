@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Card from '$lib/svelte/Card.svelte';
 	import Footer from '$lib/svelte/Footer.svelte';
-	import Indicator from '$lib/svelte/Indicator.svelte';
+	import Indicator from '$lib/svelte/Loader.svelte';
 	import type { PageServerData } from './$types';
 	export let data: PageServerData;
 
@@ -10,10 +10,8 @@
 
 <div class="frame">
 	<div class="layout w-full h-full pb-4">
-		<aside class="debug">
-			<div class="sidebar">
-				<p>Sidebar</p>
-			</div>
+		<aside>
+			<div class="sidebar"></div>
 		</aside>
 		<section>
 			<div class="pokemon grid">
@@ -38,8 +36,8 @@
 <style lang="scss">
 	.layout {
 		--flex-basis: clamp(350px, 25%, 400px);
-		margin-top: clamp(500px, 20vh, 200px);
-		padding: 0.675rem;
+		margin-top: clamp(500px, 20vh, 70svh);
+		padding: 0.675rem 0.675rem 10rem 0.675rem;
 
 		aside {
 			position: fixed;
@@ -47,6 +45,7 @@
 			left: 0;
 			width: 320px;
 			height: 100svh;
+			padding: 0.5rem 1rem 1rem 0;
 		}
 		section {
 			flex: 0 0 calc(100% - var(--flex-basis));
@@ -54,11 +53,16 @@
 	}
 
 	.sidebar {
+		--bg-color: hsl(240, 14%, 90%);
+
 		width: 100%;
-		height: calc(100svh - 100px);
+		height: calc(100svh - 100px - 1rem); // 1rem for optical correction
 		position: sticky;
 		top: 100px;
-		padding: 1rem;
+		border-radius: 1.5rem;
+		background-color: var(--bg-color);
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 
 	.pokemon {
@@ -85,6 +89,12 @@
 				height: calc(100svh - 100px);
 				flex: 0 0 var(--flex-basis);
 			}
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.sidebar {
+			--bg-color: hsl(244, 16%, 15%);
 		}
 	}
 </style>

@@ -1,11 +1,7 @@
-type TLocale = {
-	[lang: string]: {
-		[path: string]: {
-			[key: string]: string | string[];
-		};
-	};
+// ############################################################################ N
+type TNamedAPIResource = {
+	name: string;
+	url: string;
 };
-type TLocaleKey = keyof TLocale;
-type TLocalePath<T extends TLocaleKey> = keyof TLocale[T];
 
-export type { TLocale, TLocaleKey, TLocalePath };
+export type { TNamedAPIResource };

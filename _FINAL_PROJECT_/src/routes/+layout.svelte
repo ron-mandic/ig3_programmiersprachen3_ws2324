@@ -2,6 +2,8 @@
 	import '$lib/scss/styles.scss';
 	import Header from '$lib/svelte/Header.svelte';
 	import Main from '$lib/svelte/Main.svelte';
+
+	export const trailingSlash = 'always';
 </script>
 
 <svelte:head>
