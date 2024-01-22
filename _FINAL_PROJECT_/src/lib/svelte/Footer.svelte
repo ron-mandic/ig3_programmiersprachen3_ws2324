@@ -1,4 +1,4 @@
-<footer class="w-full h-[300px]" />
+<footer class="h-[300px] w-full" />
 
 <style lang="scss">
 	footer {

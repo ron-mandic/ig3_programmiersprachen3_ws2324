@@ -8,27 +8,27 @@
 </script>
 
 <div class="frame">
-	<div class="layout w-full h-full pb-4">
+	<div class="layout h-full w-full pb-4">
 		<aside>
-			<div class="sidebar flex justify-start items-start flex-col">
-				<h2 class="text-4xl font-bold p-4 pb-8">Pokémon</h2>
+			<div class="sidebar flex flex-col items-start justify-start">
+				<h2 class="p-4 pb-8 text-4xl font-bold">Pokémon</h2>
 				<div class="sidebar-layout"></div>
 			</div>
 		</aside>
 		<section>
 			{#await data.body then { results }}
-				<div class="pokemon grid relative" data-length={results.length}>
+				<div class="pokemon relative grid" data-length={results.length}>
 					{#each results as result}
-						<div class="card-wrapper flex justify-center items-center">
+						<div class="card-wrapper flex items-center justify-center">
 							<Card {result} />
 						</div>
 					{/each}
 				</div>
 			{:catch _}
-				<div class="pokemon error mt-2 w-full flex items-center justify-center">
-					<div class="flex justify-center flex-col items-center">
+				<div class="pokemon error mt-2 flex w-full items-center justify-center">
+					<div class="flex flex-col items-center justify-center">
 						<img
-							class="scale-50 opacity-5 dark:opacity-30 invert-0"
+							class="scale-50 opacity-5 invert-0 dark:opacity-30"
 							src="/svg/icon-error.svg"
 							alt="Pika-pi?"
 						/>

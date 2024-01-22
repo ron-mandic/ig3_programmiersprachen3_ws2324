@@ -1,4 +1,4 @@
-<header class="fixed w-full h-[100px] top-0 left-0 z-50" />
+<header class="fixed left-0 top-0 z-50 h-[100px] w-full" />
 
 <style lang="scss">
 	header {

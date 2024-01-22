@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../app.pcss';
 	import '$lib/scss/styles.scss';
 	import Header from '$lib/svelte/Header.svelte';
 	import Main from '$lib/svelte/Main.svelte';

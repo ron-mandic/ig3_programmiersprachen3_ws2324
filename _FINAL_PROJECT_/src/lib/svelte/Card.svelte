@@ -17,15 +17,15 @@
 </script>
 
 {#await delay(random(1000, 1500), get(result.url))}
-	<div class="card relative w-full h-full mask">
-		<div class="card__body relative w-full h-full flex items-between justify-center flex-col">
+	<div class="card relative h-full w-full mask">
+		<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
 			<div class="cb__top relative">
-				<div class="cbt__image relative w-full h-full flex items-center justify-center">
+				<div class="cbt__image relative flex h-full w-full items-center justify-center">
 					<Loader />
 				</div>
 			</div>
 			<div class="cb__bottom">
-				<div class="cbb__layout w-full h-full">
+				<div class="cbb__layout h-full w-full">
 					<div class="cbb__head">
 						<div class="skeleton small"></div>
 						<div class="skeleton h2"></div>
@@ -37,7 +37,7 @@
 	</div>
 {:then { name, id, sprites, height, weight, stats, types }}
 	<div
-		class="card relative w-full h-full mask"
+		class="card relative h-full w-full mask"
 		transition:fly={{
 			delay: random(250, 500),
 			duration: 500,
@@ -49,9 +49,9 @@
 		<div class="ch__hp flex items-center justify-center">
 			<p><span>HP</span><span>{stats[0].base_stat}</span></p>
 		</div>
-		<div class="card__body relative w-full h-full flex items-between justify-center flex-col">
+		<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
 			<div class="cb__top relative">
-				<div class="cbt__image relative w-full h-full">
+				<div class="cbt__image relative h-full w-full">
 					<img
 						class="absolute scale-90"
 						src={sprites.other['official-artwork'].front_default}
@@ -65,7 +65,7 @@
 				</div>
 			</div>
 			<div class="cb__bottom">
-				<div class="cbb__layout w-full h-full">
+				<div class="cbb__layout h-full w-full">
 					<div class="cbb__head">
 						<small>{formatId(id)}</small>
 						<h2 class="relative" class:m={name.endsWith('-m')} class:f={name.endsWith('-f')}>
@@ -99,19 +99,19 @@
 		</div>
 	</div>
 {:catch error}
-	<div class="card relative w-full h-full mask">
-		<div class="card__body relative w-full h-full flex items-between justify-center flex-col">
+	<div class="card relative h-full w-full mask">
+		<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
 			<div class="cb__top relative">
-				<div class="cbt__image relative w-full h-full flex items-center justify-center">
+				<div class="cbt__image relative flex h-full w-full items-center justify-center">
 					<img
-						class="absolute opacity-5 dark:opacity-30 invert-0 scale-50"
+						class="absolute scale-50 opacity-5 invert-0 dark:opacity-30"
 						src="/svg/icon-error.svg"
 						alt="Error"
 					/>
 				</div>
 			</div>
 			<div class="cb__bottom">
-				<div class="cbb__layout w-full h-full">
+				<div class="cbb__layout h-full w-full">
 					<div class="cbb__body">
 						<div class="row">
 							<div class="col">
