@@ -1,3 +1,5 @@
+import type { TNamedAPIResource } from './types';
+
 // ############################################################################ String
 export function toCapitalized(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -58,6 +60,20 @@ export function formatName(str: string) {
 export function formatWeight(hg: number) {
 	const kg = hg / 10;
 	return kg.toFixed(1) + ' kg';
+}
+
+// ############################################################################ Array
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function sort(arr: Array<any>, by: (a: any, b: any) => number) {
+	return arr.sort(by);
+}
+
+export function typeASC(typeA: TNamedAPIResource, typeB: TNamedAPIResource) {
+	return typeA.name.localeCompare(typeB.name);
+}
+
+export function types(type: TNamedAPIResource) {
+	return type.name !== 'shadow' && type.name !== 'unknown';
 }
 
 // ############################################################################ Promise

@@ -2,7 +2,7 @@ import { fontFamily } from 'tailwindcss/defaultTheme';
 import plugin from 'tailwindcss/plugin';
 
 /** @type {import('tailwindcss').Config} */
-export default {
+const config = {
 	darkMode: ['class'],
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	safelist: ['dark'],
@@ -66,7 +66,7 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				sans: ['Inter', ...fontFamily.sans]
+				sans: [...fontFamily.sans]
 			}
 		}
 	},
@@ -114,3 +114,5 @@ export default {
 		})
 	]
 };
+
+export default config;

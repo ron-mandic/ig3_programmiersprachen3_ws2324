@@ -1,32 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700;8..144,800;8..144,900;8..144,1000&display=swap');
+@import 'normalize.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700;8..144,800;8..144,900;8..144,1000&display=swap');
-@import 'normalize.css';
-
 :root {
-	--text-color: #0c0b0f;
-	--bg-color: #f1f0f4;
+	--background: hsl(255, 15%, 95%);
+	--foreground: hsl(255, 15%, 5%);
 
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
 
 	color-scheme: light dark;
-	color: var(--text-color);
-	background-color: var(--bg-color);
+	color: var(--foreground);
+	background-color: var(--background);
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
 
+*::-webkit-scrollbar {
+	width: 0;
 	scrollbar-width: none;
-
-	&::-webkit-scrollbar {
-		width: 0;
-	}
 }
 
 *,
@@ -51,7 +50,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--text-color: #f0f0f5;
-		--bg-color: #14141e;
+		--background: #14141f;
+		--foreground: #f0f0f5;
 	}
 }

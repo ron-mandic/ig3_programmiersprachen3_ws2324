@@ -21,6 +21,7 @@
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/eslint": "8.56.0",
+		"@types/node": "^20.11.5",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"autoprefixer": "^10.4.16",
@@ -43,8 +44,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@internationalized/date": "^3.5.1",
+		"bits-ui": "^0.15.1",
 		"clsx": "^2.1.0",
 		"lucide-svelte": "^0.314.0",
+		"mode-watcher": "^0.1.2",
 		"normalize.css": "^8.0.1",
 		"tailwind-merge": "^2.2.1",
 		"tailwind-variants": "^0.1.20"

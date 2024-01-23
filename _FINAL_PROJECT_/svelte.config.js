@@ -8,9 +8,6 @@ const config = {
 	preprocess: [vitePreprocess({})],
 
 	kit: {
-		alias: {
-			'@/*': './path/to/lib/*'
-		},
 		env: {
 			dir: './'
 		},
