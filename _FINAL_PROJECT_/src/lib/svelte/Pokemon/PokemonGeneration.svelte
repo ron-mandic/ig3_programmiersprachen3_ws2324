@@ -1,14 +1,18 @@
 <script lang="ts">
 	import Sidebar from '$lib/svelte/Sidebar.svelte';
 	import PokemonCards from '$lib/svelte/Pokemon/PokemonCards.svelte';
-	import { searchFor, getTypes, filterBy, TypeStore } from '$lib/ts/functions';
+	import { searchFor, getTypes, filterBy, getRandom, getColors, getDict } from '$lib/ts/functions';
 	import { typeStore } from '$lib/ts/$store-sidebar-types';
-	import { slide } from 'svelte/transition';
+	import { colorStore } from '$lib/ts/$store-sidebar-color';
+
 	export let data: any;
 	export let page: any;
 
 	// Props
-	let value = '';
+	let value = $page.url.searchParams.get('search') || '';
+	let dictTypes: any;
+	let dictColors: any;
+
 	const handlers = {
 		handleSearchInput(event: any) {
 			const target = event.target as HTMLInputElement;
@@ -19,23 +23,44 @@
 			const name = target.dataset.name as string;
 
 			typeStore.set({ ...$typeStore, [name]: target.checked });
+		},
+		handleColorChange(event: any) {
+			const target = event.target as HTMLInputElement;
+			const name = target.dataset.name as string;
+
+			colorStore.set({ ...$colorStore, [name]: target.checked });
 		}
 	};
 
-	// Reactive Code
+	// Filtering
 	$: species = filterBy(searchFor(data.body, value), {
-		types: $typeStore
+		types: $typeStore,
+		colors: $colorStore
 	});
 
-	// $: if (typeStore) {
-	// 	console.log($typeStore);
-	// }
+	// Updating
+	$: if (species || value) {
+		dictTypes = getDict(species, 'types', (pokemon, prop) => {
+			return pokemon[prop].map(({ type }: any) => type?.name) || null;
+		});
+		dictColors = getDict(species, 'color', (pokemon, prop) => {
+			return pokemon[prop]?.name || null;
+		});
+	}
 </script>
 
 <div class="frame">
 	<div class="layout h-full w-full pb-4">
 		<aside>
-			<Sidebar bind:value {handlers} {typeStore} types={getTypes(data.body)} />
+			<Sidebar
+				bind:value
+				{handlers}
+				placeholder={getRandom(data.body)}
+				types={getTypes(data.body)}
+				{dictTypes}
+				colors={getColors(data.body)}
+				{dictColors}
+			/>
 		</aside>
 		<section>
 			{#if species?.length === 0}
@@ -44,7 +69,6 @@
 						src="/svg/icon-error.svg"
 						alt="Pikachu"
 						class="dark-opacity-100 w-1/2 scale-50 opacity-10 dark:invert-0"
-						transition:slide
 					/>
 				</div>
 			{:else}

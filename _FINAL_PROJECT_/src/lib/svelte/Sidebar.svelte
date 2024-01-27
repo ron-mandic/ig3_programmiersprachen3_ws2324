@@ -1,15 +1,22 @@
 <script lang="ts">
 	import * as Accordion from '$lib/components/ui/accordion';
-	import { TypeStore, toCapitalized } from '$lib/ts/functions';
+	import { Store, formatName, toCapitalized } from '$lib/ts/functions';
+	import { typeStore } from '$lib/ts/$store-sidebar-types';
+	import { colorStore } from '$lib/ts/$store-sidebar-color';
 	import { onMount } from 'svelte';
 
 	export let value: string;
 	export let handlers: any;
+	export let placeholder: any;
+
 	export let types: any;
-	export let typeStore: any;
+	export let dictTypes: any;
+	export let colors: any;
+	export let dictColors: any;
 
 	onMount(() => {
-		typeStore.set(TypeStore.init(types));
+		typeStore.set(Store.init(types));
+		colorStore.set(Store.init(colors));
 	});
 </script>
 
@@ -20,20 +27,21 @@
 			id="sidebar-search"
 			type="text"
 			name="name"
-			placeholder="Sandslash or 28"
-			class="h-full w-full bg-transparent px-4 py-4"
+			placeholder={`${formatName(toCapitalized(placeholder.name))} or ${placeholder.id}`}
+			class="mb-1 h-full w-full bg-transparent px-4 py-4"
 			bind:value
 			on:input={handlers.handleSearchInput}
 		/>
 	</div>
 	<div class="body">
-		<div class="sidebar-layout mb-4 h-auto px-4 py-1">
+		<div class="sidebar-layout mb-4 mt-3 h-auto px-4 py-1">
 			<Accordion.Root>
 				<Accordion.Item value="types">
 					<Accordion.Trigger class="text-xl font-semibold"
 						><h3>
 							Types
-							<span class="font-semibold opacity-50">({TypeStore.getCheckedCount($typeStore)})</span
+							<span class="text-base font-normal opacity-50"
+								>({Store.getCheckedCount($typeStore)})</span
 							>
 						</h3></Accordion.Trigger
 					>
@@ -42,13 +50,51 @@
 							{#each Object.entries($typeStore) as [name, checked]}
 								<label class="flex cursor-pointer items-center justify-start p-2 {name}">
 									<img class="z-1 scale-125" src="/svg/icon-type-{name}.svg" alt={name} />
-									<span class="ml-4 text-lg font-semibold">{toCapitalized(name)}</span>
+									<p class="ml-4 text-lg font-semibold">
+										{toCapitalized(name)}
+										<span class="text-base font-normal opacity-50">({dictTypes[name] || 0})</span>
+									</p>
 									<input
 										type="checkbox"
 										name="type"
 										data-name={name}
 										{checked}
 										on:change={handlers.handleTypeChange}
+									/>
+								</label>
+							{/each}
+						</div>
+					</Accordion.Content>
+				</Accordion.Item>
+			</Accordion.Root>
+		</div>
+
+		<div class="sidebar-layout mb-4 h-auto px-4 py-1">
+			<Accordion.Root>
+				<Accordion.Item value="colors">
+					<Accordion.Trigger class="text-xl font-semibold"
+						><h3>
+							Colors
+							<span class="text-base font-normal opacity-50"
+								>({Store.getCheckedCount($colorStore)})</span
+							>
+						</h3></Accordion.Trigger
+					>
+					<Accordion.Content>
+						<div class="checkboxes flex h-auto w-full flex-col gap-2 px-2 py-2">
+							{#each Object.entries($colorStore) as [name, checked]}
+								<label class="flex cursor-pointer items-center justify-start p-2 {name}">
+									<img class="z-1 scale-125" src="/svg/icon-color-{name}.svg" alt={name} />
+									<p class="ml-4 text-lg font-semibold">
+										{toCapitalized(name)}
+										<span class="text-base font-normal opacity-50">({dictColors[name] || 0})</span>
+									</p>
+									<input
+										type="checkbox"
+										name="type"
+										data-name={name}
+										{checked}
+										on:change={handlers.handleColorChange}
 									/>
 								</label>
 							{/each}

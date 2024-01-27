@@ -109,19 +109,6 @@ export function isId(arg: string) {
 
 // ############################################################################ Array
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function sort(arr: Array<any>, by: (a: any, b: any) => number) {
-	return arr.sort(by);
-}
-
-export function typeASC(typeA: TNamedAPIResource, typeB: TNamedAPIResource) {
-	return typeA.name.localeCompare(typeB.name);
-}
-
-export function types(type: TNamedAPIResource) {
-	return type.name !== 'shadow' && type.name !== 'unknown';
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function searchFor(pokemonList: any[], arg: string): any[] {
 	if (!arg) return pokemonList;
 
@@ -132,11 +119,13 @@ export function searchFor(pokemonList: any[], arg: string): any[] {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function filterBy(pokemonList: any[], options: { [key: string]: object }) {
+	let arr = [...pokemonList];
+
 	if (options.types) {
 		// @ts-expect-error No matching type
-		if (TypeStore.isEmpty(options.types)) return [];
+		if (Store.isEmpty(options.types)) return [];
 
-		return pokemonList.filter((pokemon) => {
+		arr = pokemonList.filter((pokemon) => {
 			for (const type of pokemon.types) {
 				// @ts-expect-error No matching type
 				if (options.types[type.type.name]) return true;
@@ -144,6 +133,73 @@ export function filterBy(pokemonList: any[], options: { [key: string]: object })
 			return false;
 		});
 	}
+
+	if (options.colors) {
+		// @ts-expect-error No matching type
+		if (Store.isEmpty(options.colors)) return [];
+
+		arr = arr.filter((pokemon) => {
+			// @ts-expect-error No matching type
+			return options.colors[pokemon.color.name];
+		});
+	}
+
+	return arr;
+}
+
+export function shuffle<T>(array: T[]) {
+	let currentIndex = array.length,
+		temporaryValue,
+		randomIndex;
+
+	while (currentIndex !== 0) {
+		randomIndex = random(0, currentIndex - 1);
+		currentIndex -= 1;
+
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+
+	return array;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getRandom(pokemonList: any[]) {
+	return pokemonList[Math.floor(Math.random() * pokemonList.length)];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getDict(pokemonList: any[], prop: string, get: (...args: any[]) => any) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const dict: { [key: string]: any } = {};
+
+	for (let i = 0; i < pokemonList.length; i++) {
+		const pokemon = pokemonList[i];
+		const args = get(pokemon, prop);
+
+		if (args === null) continue;
+
+		if (Array.isArray(args)) {
+			for (const arg of args) {
+				if (!dict[arg]) dict[arg] = 1;
+				else dict[arg]++;
+			}
+		} else {
+			if (!dict[args]) dict[args] = 1;
+			else dict[args]++;
+		}
+	}
+
+	return dict;
+}
+
+export function getEmptyDictEntries(dict: { [key: string]: number }) {
+	const entries = [];
+	for (const key in dict) {
+		if (dict[key] === 0) entries.push(key);
+	}
+	return entries;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -155,6 +211,15 @@ export function getTypes(pokemonList: any[]) {
 		}
 	}
 	return [...setTypes];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getColors(pokemonList: any[]) {
+	const setColors = new Set();
+	for (const pokemon of pokemonList) {
+		setColors.add(pokemon.color.name);
+	}
+	return [...setColors];
 }
 
 // ############################################################################ Promise
@@ -181,7 +246,7 @@ export function random(min: number, max: number) {
 
 // ############################################################################ Store
 // typeStore
-export class TypeStore {
+export class Store {
 	static init(types: string[]) {
 		const obj: { [key: string]: boolean } = {};
 		for (const type of types) {
