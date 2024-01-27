@@ -5,6 +5,7 @@ export function toCapitalized(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// formatting
 export function formatId(id: number, length: number = 4) {
 	if (id <= 0) throw new Error('fomatId: Your value must be positive');
 	return '# ' + id.toString().padStart(length, '0');
@@ -62,6 +63,50 @@ export function formatWeight(hg: number) {
 	return kg.toFixed(1) + ' kg';
 }
 
+export function formatSearch(inputText: string, searchText: string) {
+	if (!searchText) return inputText;
+
+	const escapedSearchText = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+	const regExp = new RegExp(`(${escapedSearchText})`, 'gi');
+	const markedText = inputText.replace(regExp, '<mark>$1</mark>');
+
+	return markedText;
+}
+
+// parsing
+export function parseToRoman(url: string): string | null {
+	const match = url.match(/\/(\d+)\/$/);
+
+	if (match) {
+		const number = parseInt(match[1], 10);
+
+		if (number >= 1 && number <= 9) {
+			const romanNumerals = ['', 'i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix'];
+			return romanNumerals[number];
+		}
+	}
+
+	return null;
+}
+
+// extracting
+export function extractNumber(url: string): number | null {
+	const match = url.match(/\/(\d+)\/$/);
+
+	if (match) {
+		const number = parseInt(match[1], 10);
+		return isNaN(number) ? null : number;
+	}
+
+	return null;
+}
+
+// ############################################################################ Boolean
+export function isId(arg: string) {
+	return !isNaN(parseInt(arg, 10));
+}
+
 // ############################################################################ Array
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function sort(arr: Array<any>, by: (a: any, b: any) => number) {
@@ -74,6 +119,42 @@ export function typeASC(typeA: TNamedAPIResource, typeB: TNamedAPIResource) {
 
 export function types(type: TNamedAPIResource) {
 	return type.name !== 'shadow' && type.name !== 'unknown';
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function searchFor(pokemonList: any[], arg: string): any[] {
+	if (!arg) return pokemonList;
+
+	return isId(arg)
+		? pokemonList.filter((pokemon) => pokemon.id === +arg)
+		: pokemonList.filter((pokemon) => pokemon.name.includes(arg.toLowerCase()));
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function filterBy(pokemonList: any[], options: { [key: string]: object }) {
+	if (options.types) {
+		// @ts-expect-error No matching type
+		if (TypeStore.isEmpty(options.types)) return [];
+
+		return pokemonList.filter((pokemon) => {
+			for (const type of pokemon.types) {
+				// @ts-expect-error No matching type
+				if (options.types[type.type.name]) return true;
+			}
+			return false;
+		});
+	}
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getTypes(pokemonList: any[]) {
+	const setTypes = new Set();
+	for (const pokemon of pokemonList) {
+		for (const { type } of pokemon.types) {
+			setTypes.add(type.name);
+		}
+	}
+	return [...setTypes];
 }
 
 // ############################################################################ Promise
@@ -96,4 +177,42 @@ export async function get(url: string, ms?: number) {
 // ############################################################################ Number
 export function random(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// ############################################################################ Store
+// typeStore
+export class TypeStore {
+	static init(types: string[]) {
+		const obj: { [key: string]: boolean } = {};
+		for (const type of types) {
+			obj[type] = true;
+		}
+		return obj;
+	}
+	static isSomeChecked(obj: { [key: string]: boolean }) {
+		if (!obj) return false;
+		for (const key in obj) {
+			if (obj[key]) return true;
+		}
+		return false;
+	}
+	static isEmpty(obj: { [key: string]: boolean }) {
+		for (const key in obj) {
+			if (obj[key]) return false;
+		}
+		return true;
+	}
+	static getCheckedCount(obj: { [key: string]: boolean }) {
+		let count = 0;
+		for (const key in obj) {
+			if (obj[key]) count++;
+		}
+		return count;
+	}
+	static isAllChecked(obj: { [key: string]: boolean }) {
+		for (const key in obj) {
+			if (!obj[key]) return false;
+		}
+		return true;
+	}
 }

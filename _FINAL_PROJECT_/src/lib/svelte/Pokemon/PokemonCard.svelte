@@ -1,51 +1,152 @@
 <script lang="ts">
 	import {
 		delay,
-		get,
 		formatHeight,
 		formatId,
 		formatName,
 		formatWeight,
 		toCapitalized,
-		random
+		random,
+		formatSearch,
+		isId,
+		TypeStore
 	} from '$lib/ts/functions';
-	import { fly } from 'svelte/transition';
+	import { fly, blur } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import type { TNamedAPIResource } from '$lib/ts/types';
-	import Loader from './Loader.svelte';
-	export let result: TNamedAPIResource;
+	import Loader from '../Loader.svelte';
+	import { typeStore } from '$lib/ts/$store-sidebar-types';
+
+	export let pokemon: any;
+	export let value: string;
 </script>
 
-{#await delay(random(1000, 1500), get(result.url))}
-	<div class="card relative h-full w-full mask">
-		<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
-			<div class="cb__top relative">
-				<div class="cbt__image relative flex h-full w-full items-center justify-center">
-					<Loader />
-				</div>
-			</div>
-			<div class="cb__bottom">
-				<div class="cbb__layout h-full w-full">
-					<div class="cbb__head">
-						<div class="skeleton small"></div>
-						<div class="skeleton h2"></div>
+{#if !value && TypeStore.isAllChecked($typeStore)}
+	{#await delay(random(250, 1250), pokemon)}
+		<div
+			class="card absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 mask"
+			transition:blur={{ amount: 5 }}
+		>
+			<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
+				<div class="cb__top relative">
+					<div class="cbt__image relative flex h-full w-full items-center justify-center">
+						<Loader />
 					</div>
-					<div class="cbb__body"></div>
+				</div>
+				<div class="cb__bottom">
+					<div class="cbb__layout h-full w-full">
+						<div class="cbb__head">
+							<div class="skeleton small"></div>
+							<div class="skeleton h2"></div>
+						</div>
+						<div class="cbb__body"></div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-{:then { name, id, sprites, height, weight, stats, types }}
-	<div
-		class="card relative h-full w-full mask"
-		transition:fly={{
-			delay: random(250, 500),
-			duration: 500,
-			x: 0,
-			y: random(20, 40),
-			easing: quintOut
-		}}
-	>
+	{:then { name, id, sprites, height, weight, stats, types }}
+		<div
+			class="card z-1000 relative h-full w-full mask"
+			transition:fly={{
+				delay: random(250, 500),
+				duration: 500,
+				x: 0,
+				y: random(20, 50),
+				easing: quintOut
+			}}
+		>
+			<div class="ch__hp flex items-center justify-center">
+				<p><span>HP</span><span>{stats[0].base_stat}</span></p>
+			</div>
+			<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
+				<div class="cb__top relative">
+					<div class="cbt__image relative h-full w-full">
+						<img
+							class="absolute scale-90"
+							src={sprites.other['official-artwork'].front_default}
+							alt={id}
+						/>
+					</div>
+					<div class="cbt__types">
+						{#each types as { type }, i}
+							<div class="type {type.name}" style:--z-index={types.length - i}></div>
+						{/each}
+					</div>
+				</div>
+				<div class="cb__bottom">
+					<div class="cbb__layout h-full w-full">
+						<div class="cbb__head">
+							<small
+								>{#if isId(value)}
+									{@html formatSearch(formatId(id), value)}
+								{:else}
+									{formatId(id)}
+								{/if}</small
+							>
+							<h2 class="relative" class:m={name.endsWith('-m')} class:f={name.endsWith('-f')}>
+								{#if !isId(value)}
+									{@html formatSearch(formatName(toCapitalized(name)), value)}
+								{:else}
+									{formatName(toCapitalized(name))}
+								{/if}
+							</h2>
+						</div>
+						<div class="cbb__body">
+							<div class="row">
+								<div class="col">
+									<h3 class="cbbb__head">Height</h3>
+									<p class="cbbb__body">{formatHeight(height)}</p>
+								</div>
+								<div class="col">
+									<h3 class="cbbb__head">Attack</h3>
+									<p class="cbbb__body">{stats[1]['base_stat']}</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<h3 class="cbbb__head">Weight</h3>
+									<p class="cbbb__body">{formatWeight(weight)}</p>
+								</div>
+								<div class="col">
+									<h3 class="cbbb__head">Defense</h3>
+									<p class="cbbb__body">{stats[2]['base_stat']}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{:catch error}
+		<div class="card relative h-full w-full mask">
+			<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
+				<div class="cb__top relative">
+					<div class="cbt__image relative flex h-full w-full items-center justify-center">
+						<img
+							class="absolute scale-50 opacity-5 invert-0 dark:opacity-30"
+							src="/svg/icon-error.svg"
+							alt="Error"
+						/>
+					</div>
+				</div>
+				<div class="cb__bottom">
+					<div class="cbb__layout h-full w-full">
+						<div class="cbb__body">
+							<div class="row">
+								<div class="col">
+									<h3 class="cbbb__head">Pika-pi?</h3>
+									<p class="cbbb__body" style="margin-top: 7%;">{error.message}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{/await}
+{:else}
+	{@const { name, id, sprites, height, weight, stats, types } = pokemon}
+
+	<div class="card z-1000 relative h-full w-full mask">
 		<div class="ch__hp flex items-center justify-center">
 			<p><span>HP</span><span>{stats[0].base_stat}</span></p>
 		</div>
@@ -67,9 +168,19 @@
 			<div class="cb__bottom">
 				<div class="cbb__layout h-full w-full">
 					<div class="cbb__head">
-						<small>{formatId(id)}</small>
+						<small
+							>{#if isId(value)}
+								{@html formatSearch(formatId(id), value)}
+							{:else}
+								{formatId(id)}
+							{/if}</small
+						>
 						<h2 class="relative" class:m={name.endsWith('-m')} class:f={name.endsWith('-f')}>
-							{formatName(toCapitalized(name))}
+							{#if !isId(value)}
+								{@html formatSearch(formatName(toCapitalized(name)), value)}
+							{:else}
+								{formatName(toCapitalized(name))}
+							{/if}
 						</h2>
 					</div>
 					<div class="cbb__body">
@@ -98,37 +209,9 @@
 			</div>
 		</div>
 	</div>
-{:catch error}
-	<div class="card relative h-full w-full mask">
-		<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
-			<div class="cb__top relative">
-				<div class="cbt__image relative flex h-full w-full items-center justify-center">
-					<img
-						class="absolute scale-50 opacity-5 invert-0 dark:opacity-30"
-						src="/svg/icon-error.svg"
-						alt="Error"
-					/>
-				</div>
-			</div>
-			<div class="cb__bottom">
-				<div class="cbb__layout h-full w-full">
-					<div class="cbb__body">
-						<div class="row">
-							<div class="col">
-								<h3 class="cbbb__head">Pika-pi?</h3>
-								<p class="cbbb__body" style="margin-top: 7%;">{error.message}</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-{/await}
+{/if}
 
 <style lang="scss">
-	@use 'sass:math';
-
 	.skeleton {
 		border-radius: 1rem;
 		animation: skeleton-light 1s linear infinite alternate;

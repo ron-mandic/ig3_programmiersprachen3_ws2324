@@ -1,4 +1,4 @@
-<header class="fixed left-0 top-0 z-50 h-[100px] w-full" />
+<header class="z-999 fixed left-0 top-0 h-[100px] w-full"></header>
 
 <style lang="scss">
 	header {
@@ -8,7 +8,7 @@
 		background-color: var(--bg-color);
 		backdrop-filter: blur(50px);
 		border-bottom: 0.125rem solid var(--border-bottom-color);
-		z-index: 999;
+		z-index: 10000;
 	}
 
 	@media (prefers-color-scheme: dark) {

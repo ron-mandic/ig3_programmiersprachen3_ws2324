@@ -1,7 +1,6 @@
 <script>
 	export let radius = 20,
-		stroke = '#000',
-		strokeWidth = 6;
+		strokeWidth = 5;
 
 	const x0 = radius + 5,
 		y0 = radius + 5,
@@ -15,7 +14,7 @@
 
 <div class="indicator">
 	<svg viewBox="{x0} {y0} {w} {h}" style:--width={w + 'px'}>
-		<circle r={radius} {cx} {cy} style:--strokeWidth={strokeWidth} style:--stroke={stroke}></circle>
+		<circle r={radius} {cx} {cy} style:--strokeWidth={strokeWidth}></circle>
 	</svg>
 </div>
 
@@ -24,16 +23,16 @@
 		width: var(--width);
 		transform-origin: center;
 		animation: rotate 2s linear infinite;
-		filter: invert(1);
 	}
 
 	circle {
 		fill: none;
-		stroke: var(--bg-color);
+		stroke: var(--foreground);
 		stroke-width: var(--strokeWidth);
 		stroke-dasharray: 1, 200;
 		stroke-dashoffset: 0;
 		stroke-linecap: round;
+		opacity: 0.75;
 		animation: dash 1.5s ease-in-out infinite;
 	}
 

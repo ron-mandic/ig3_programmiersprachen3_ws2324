@@ -72,28 +72,7 @@ const config = {
 	},
 	plugins: [
 		plugin(function ({ addUtilities }) {
-			// addBase({
-			// 	h1: {
-			// 		fontSize: theme('fontSize.2xl')
-			// 	},
-			// 	h2: {
-			// 		fontSize: theme('fontSize.xl')
-			// 	}
-			// });
-			// addComponents({
-			// 	'.card': {
-			// 		backgroundColor: theme('colors.white'),
-			// 		borderRadius: theme('borderRadius.lg'),
-			// 		padding: theme('spacing.6'),
-			// 		boxShadow: theme('boxShadow.xl')
-			// 	}
-			// });
 			addUtilities({
-				// '.content-visibility': {
-				// 	containIntrinsicSize: '100px 200px',
-				// 	contentVisibility: 'auto',
-				// 	containment: 'layout paint'
-				// }
 				'.debug': {
 					outline: '1px solid rgba(255, 0, 0, 0.5)'
 				},
@@ -107,10 +86,6 @@ const config = {
 					overflow: 'hidden'
 				}
 			});
-			// theme('contentVisibility', {
-			// 	visible: 'visible',
-			// 	hidden: 'hidden'
-			// });
 		})
 	]
 };
