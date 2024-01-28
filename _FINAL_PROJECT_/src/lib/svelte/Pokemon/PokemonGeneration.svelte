@@ -8,7 +8,8 @@
 		getRandom,
 		getColors,
 		getDict,
-		getGrowthRates
+		getGrowthRates,
+		getDictStages
 	} from '$lib/ts/functions';
 	import { typeStore } from '$lib/ts/$store-sidebar-types';
 	import { colorStore } from '$lib/ts/$store-sidebar-colors';
@@ -24,6 +25,8 @@
 	let dictColors: any;
 	let dictGrowthRates: any;
 	let dictStages: any;
+
+	console.log(data.body);
 
 	const handlers = {
 		handleSearchInput(event: any) {
@@ -47,6 +50,13 @@
 			const name = target.dataset.name as string;
 
 			growthRateStore.set({ ...$growthRateStore, [name]: target.checked });
+		},
+		handleStageChange(event: any) {
+			const target = event.target as HTMLInputElement;
+			const name = target.name as string;
+			const value = target.dataset.value as string;
+			// @ts-ignore
+			stageStore.set({ ...$stageStore, [name]: +value });
 		}
 	};
 
@@ -54,7 +64,8 @@
 	$: species = filterBy(searchFor(data.body, value), {
 		types: $typeStore,
 		colors: $colorStore,
-		growthRates: $growthRateStore
+		growthRates: $growthRateStore,
+		stages: $stageStore
 	});
 
 	// Updating
@@ -68,6 +79,7 @@
 		dictGrowthRates = getDict(species, 'growth_rate', (pokemon, prop) => {
 			return pokemon[prop]?.name || null;
 		});
+		dictStages = getDictStages(species);
 	}
 </script>
 
@@ -76,14 +88,16 @@
 		<aside>
 			<Sidebar
 				bind:value
-				{handlers}
 				placeholder={getRandom(data.body)}
+				{handlers}
 				types={getTypes(data.body)}
 				{dictTypes}
 				colors={getColors(data.body)}
 				{dictColors}
 				growthRates={getGrowthRates(data.body)}
 				{dictGrowthRates}
+				stages={['is_baby', 'is_legendary', 'is_mythical']}
+				{dictStages}
 			/>
 		</aside>
 		<section>

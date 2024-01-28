@@ -1,5 +1,3 @@
-import type { TNamedAPIResource } from './types';
-
 // ############################################################################ String
 export function toCapitalized(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -128,39 +126,67 @@ export function searchFor(pokemonList: any[], arg: string): any[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function filterBy(pokemonList: any[], options: { [key: string]: object }) {
+export function filterBy(pokemonList: any[], stores: { [key: string]: object }) {
 	let arr = [...pokemonList];
 
-	if (options.types) {
+	if (stores.types) {
 		// @ts-expect-error No matching type
-		if (Store.isEmpty(options.types)) return [];
+		if (Store.isEmpty(stores.types)) return [];
 
 		arr = pokemonList.filter((pokemon) => {
 			for (const type of pokemon.types) {
 				// @ts-expect-error No matching type
-				if (options.types[type.type.name]) return true;
+				if (stores.types[type.type.name]) return true;
 			}
 			return false;
 		});
 	}
 
-	if (options.colors) {
+	if (stores.colors) {
 		// @ts-expect-error No matching type
-		if (Store.isEmpty(options.colors)) return [];
+		if (Store.isEmpty(stores.colors)) return [];
 
 		arr = arr.filter((pokemon) => {
 			// @ts-expect-error No matching type
-			return options.colors[pokemon.color.name];
+			return stores.colors[pokemon.color.name];
 		});
 	}
 
-	if (options.growthRates) {
+	if (stores.growthRates) {
 		// @ts-expect-error No matching type
-		if (Store.isEmpty(options.growthRates)) return [];
+		if (Store.isEmpty(stores.growthRates)) return [];
 
 		arr = arr.filter((pokemon) => {
 			// @ts-expect-error No matching type
-			return options.growthRates[pokemon.growth_rate.name];
+			return stores.growthRates[pokemon.growth_rate.name];
+		});
+	}
+
+	stages: if (stores.stages) {
+		// @ts-expect-error No matching type
+		if (Store.isEmpty(stores.stages)) return [];
+		// @ts-expect-error No matching type
+		const isBaby = stores.stages['is_baby'];
+		// @ts-expect-error No matching type
+		const isLegendary = stores.stages['is_legendary'];
+		// @ts-expect-error No matching type
+		const isMythical = stores.stages['is_mythical'];
+
+		if (isBaby === -1 && isLegendary === -1 && isMythical === -1) break stages;
+
+		arr = arr.filter((pokemon) => {
+			const isPokemonBaby = pokemon.is_baby;
+			const isPokemonLegendary = pokemon.is_legendary;
+			const isPokemonMythical = pokemon.is_mythical;
+
+			if (
+				(isBaby !== -1 && isPokemonBaby !== (isBaby === 0)) ||
+				(isLegendary !== -1 && isPokemonLegendary !== (isLegendary === 0)) ||
+				(isMythical !== -1 && isPokemonMythical !== (isMythical === 0))
+			) {
+				return false;
+			}
+			return true;
 		});
 	}
 
@@ -209,6 +235,24 @@ export function getDict(pokemonList: any[], prop: string, get: (...args: any[]) 
 			if (!dict[args]) dict[args] = 1;
 			else dict[args]++;
 		}
+	}
+
+	return dict;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getDictStages(pokemonList: any[]) {
+	const dict = {
+		is_baby: 0,
+		is_legendary: 0,
+		is_mythical: 0
+	};
+
+	for (const pokemon of pokemonList) {
+		const { is_baby, is_legendary, is_mythical } = pokemon;
+		if (is_baby) dict.is_baby += 1;
+		if (is_legendary) dict.is_legendary += 1;
+		if (is_mythical) dict.is_mythical += 1;
 	}
 
 	return dict;
@@ -276,7 +320,7 @@ export function random(min: number, max: number) {
 // ############################################################################ Store
 // typeStore
 export class Store {
-	static init(types: string[], value: boolean = true) {
+	static init(types: string[] | number[], value: boolean = true) {
 		const obj: { [key: string]: boolean } = {};
 		for (const type of types) {
 			obj[type] = value;
@@ -321,4 +365,49 @@ export class Store {
 
 		return callback ? names.map(callback).join(', ') : names.map(toCapitalized).join(', ');
 	}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	static isAll(store: { [key: string]: any }, value: any) {
+		for (const key in store) {
+			if (store[key] !== value) return false;
+		}
+		return true;
+	}
+}
+
+export function formatStages(objStages: { [key: string]: -1 | 0 | 1 }) {
+	/**
+	 * labels: is_baby, is_legendary, is_mythical
+	 * possible values: -1, 0, 1
+	 * possible combinations: 27 (3^3)
+	 */
+
+	const labels: string[] = [];
+	const { is_baby, is_legendary, is_mythical } = objStages;
+
+	// Guard clauses
+	if (is_baby === -1 && is_legendary === -1 && is_mythical === -1) return 'Unspecified';
+	if (
+		(is_baby === 0 && is_legendary === -1 && is_mythical === -1) ||
+		(is_baby === 0 && is_legendary === 1 && is_mythical === 1)
+	)
+		return 'Baby only';
+	if (
+		(is_baby === -1 && is_legendary === 0 && is_mythical === -1) ||
+		(is_baby === 1 && is_legendary === 0 && is_mythical === 1)
+	)
+		return 'Legendary only';
+	if (
+		(is_baby === -1 && is_legendary === -1 && is_mythical === 0) ||
+		(is_baby === 1 && is_legendary === 1 && is_mythical === 0)
+	)
+		return 'Mythical only';
+	if (is_baby === 0 && is_legendary === 0 && is_mythical === 0) return 'All true';
+	if (is_baby === 1 && is_legendary === 1 && is_mythical === 1) return 'All false';
+
+	// Regular clauses
+	if (is_baby === 0) labels.push('Baby');
+	if (is_legendary === 0) labels.push('Legendary');
+	if (is_mythical === 0) labels.push('Mythical');
+
+	return labels.join(', ');
 }
