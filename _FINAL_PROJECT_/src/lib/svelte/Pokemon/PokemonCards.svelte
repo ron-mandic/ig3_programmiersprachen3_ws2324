@@ -1,13 +1,14 @@
 <script lang="ts">
 	import PokemonCard from './PokemonCard.svelte';
 	export let species: any;
-	export let value: string;
+	export let searchValue: string;
+	export let sortValue: string | null;
 </script>
 
 <div class="pokemon relative grid" data-length={species.length}>
 	{#each species as pokemon (pokemon.id)}
 		<div class="card-wrapper relative flex items-center justify-center">
-			<PokemonCard {pokemon} {value} />
+			<PokemonCard {pokemon} {searchValue} {sortValue} />
 		</div>
 	{/each}
 </div>
@@ -19,9 +20,9 @@
 		&::after {
 			content: attr(data-length) ' Pokémon';
 			position: absolute;
-			top: -1.5rem;
+			top: -2.25rem;
 			left: 0.5rem;
-			translate: 0 -50%;
+			translate: 0 calc(-50% - 3.25rem);
 			width: fit-content;
 			height: fit-content;
 			font-weight: bold;
@@ -35,6 +36,12 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+		}
+	}
+
+	@media only screen and (min-width: 549px) {
+		.pokemon::after {
+			translate: 0 -50%;
 		}
 	}
 </style>

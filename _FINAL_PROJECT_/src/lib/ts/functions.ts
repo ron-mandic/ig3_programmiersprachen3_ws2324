@@ -82,6 +82,18 @@ export function formatGrowthRate(str: string) {
 	return str;
 }
 
+export function formatSortValue(str: string) {
+	if (str === 'id-asc') return 'Sort by ID (ASC)';
+	if (str === 'id-desc') return 'Sort by ID (DESC)';
+	if (str === 'name-asc') return 'Sort by Name (ASC)';
+	if (str === 'name-desc') return 'Sort by Name (DESC)';
+	if (str === 'height-asc') return 'Sort by Height (ASC)';
+	if (str === 'height-desc') return 'Sort by Height (DESC)';
+	if (str === 'weight-asc') return 'Sort by Weight (ASC)';
+	if (str === 'weight-desc') return 'Sort by Weight (DESC)';
+	return str;
+}
+
 // parsing
 export function parseToRoman(url: string): string | null {
 	const match = url.match(/\/(\d+)\/$/);
@@ -315,6 +327,27 @@ export async function get(url: string, ms?: number) {
 // ############################################################################ Number
 export function random(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// ############################################################################ Functions
+export function getSortingAlgorithm(sortValue: string) {
+	switch (sortValue) {
+		case 'id-asc': {
+			return (a: { id: number }, b: { id: number }) => a.id - b.id;
+		}
+		case 'id-desc': {
+			return (a: { id: number }, b: { id: number }) => b.id - a.id;
+		}
+		case 'name-asc': {
+			return (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
+		}
+		case 'name-desc': {
+			return (a: { name: string }, b: { name: string }) => b.name.localeCompare(a.name);
+		}
+		default: {
+			return (a: { id: number }, b: { id: number }) => a.id - b.id;
+		}
+	}
 }
 
 // ############################################################################ Store

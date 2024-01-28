@@ -13,7 +13,7 @@
 	import { onMount } from 'svelte';
 	import { stageStore } from '$lib/ts/$store-sidebar-stages';
 
-	export let value: string;
+	export let searchValue: string;
 	export let placeholder: any = 'Name or ID';
 	export let handlers: any;
 
@@ -44,7 +44,7 @@
 			name="name"
 			placeholder={`${formatName(toCapitalized(placeholder.name))} or ${placeholder.id}`}
 			class="mb-1 h-full w-full bg-transparent px-4 py-4 placeholder:opacity-60"
-			bind:value
+			bind:value={searchValue}
 			on:input={handlers.handleSearchInput}
 		/>
 	</div>
@@ -374,6 +374,7 @@
 		background-color: var(--bg-color);
 		overflow-x: hidden;
 		overflow-y: auto;
+		border: 1px solid var(--background); // to ensure no mask artifacts are visible
 
 		.sidebar-layout,
 		#sidebar-search {

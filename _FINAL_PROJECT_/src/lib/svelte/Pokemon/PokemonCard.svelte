@@ -13,18 +13,20 @@
 	} from '$lib/ts/functions';
 	import { fly, blur } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import Loader from '../Loader.svelte';
 	import { typeStore } from '$lib/ts/$store-sidebar-types';
 	import { colorStore } from '$lib/ts/$store-sidebar-colors';
 	import { growthRateStore } from '$lib/ts/$store-sidebar-growth-rates';
 	import { stageStore } from '$lib/ts/$store-sidebar-stages';
+	import { page } from '$app/stores';
+	import Loader from '../Loader.svelte';
 
 	export let pokemon: any;
-	export let value: string;
+	export let searchValue: string;
+	export let sortValue: string | null;
 </script>
 
-{#if !value && Store.isAllChecked($typeStore) && Store.isAllChecked($colorStore) && Store.isAllChecked($growthRateStore) && Store.isAll($stageStore, -1)}
-	{#await delay(random(250, 1250), pokemon)}
+{#if ($page.url.searchParams.get('search') || !searchValue) && Store.isAllChecked($typeStore) && Store.isAllChecked($colorStore) && Store.isAllChecked($growthRateStore) && Store.isAll($stageStore, -1) && sortValue === null}
+	{#await delay(random(250, 1000), pokemon)}
 		<div
 			class="card absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 mask"
 			transition:blur={{ amount: 5 }}
@@ -90,15 +92,15 @@
 					<div class="cbb__layout h-full w-full">
 						<div class="cbb__head">
 							<small
-								>{#if isId(value)}
-									{@html formatSearch(formatId(id), value)}
+								>{#if isId(searchValue)}
+									{@html formatSearch(formatId(id), searchValue)}
 								{:else}
 									{formatId(id)}
 								{/if}</small
 							>
 							<h2 class="relative" class:m={name.endsWith('-m')} class:f={name.endsWith('-f')}>
-								{#if !isId(value)}
-									{@html formatSearch(formatName(toCapitalized(name)), value)}
+								{#if !isId(searchValue)}
+									{@html formatSearch(formatName(toCapitalized(name)), searchValue)}
 								{:else}
 									{formatName(toCapitalized(name))}
 								{/if}
@@ -194,15 +196,15 @@
 				<div class="cbb__layout h-full w-full">
 					<div class="cbb__head">
 						<small
-							>{#if isId(value)}
-								{@html formatSearch(formatId(id), value)}
+							>{#if isId(searchValue)}
+								{@html formatSearch(formatId(id), searchValue)}
 							{:else}
 								{formatId(id)}
 							{/if}</small
 						>
 						<h2 class="relative" class:m={name.endsWith('-m')} class:f={name.endsWith('-f')}>
-							{#if !isId(value)}
-								{@html formatSearch(formatName(toCapitalized(name)), value)}
+							{#if !isId(searchValue)}
+								{@html formatSearch(formatName(toCapitalized(name)), searchValue)}
 							{:else}
 								{formatName(toCapitalized(name))}
 							{/if}
