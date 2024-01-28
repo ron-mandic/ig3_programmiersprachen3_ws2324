@@ -1,9 +1,19 @@
 <script lang="ts">
 	import Sidebar from '$lib/svelte/Sidebar.svelte';
 	import PokemonCards from '$lib/svelte/Pokemon/PokemonCards.svelte';
-	import { searchFor, getTypes, filterBy, getRandom, getColors, getDict } from '$lib/ts/functions';
+	import {
+		searchFor,
+		getTypes,
+		filterBy,
+		getRandom,
+		getColors,
+		getDict,
+		getGrowthRates
+	} from '$lib/ts/functions';
 	import { typeStore } from '$lib/ts/$store-sidebar-types';
-	import { colorStore } from '$lib/ts/$store-sidebar-color';
+	import { colorStore } from '$lib/ts/$store-sidebar-colors';
+	import { growthRateStore } from '$lib/ts/$store-sidebar-growth-rates';
+	import { stageStore } from '$lib/ts/$store-sidebar-stages';
 
 	export let data: any;
 	export let page: any;
@@ -12,6 +22,8 @@
 	let value = $page.url.searchParams.get('search') || '';
 	let dictTypes: any;
 	let dictColors: any;
+	let dictGrowthRates: any;
+	let dictStages: any;
 
 	const handlers = {
 		handleSearchInput(event: any) {
@@ -29,13 +41,20 @@
 			const name = target.dataset.name as string;
 
 			colorStore.set({ ...$colorStore, [name]: target.checked });
+		},
+		handleGrowthRateChange(event: any) {
+			const target = event.target as HTMLInputElement;
+			const name = target.dataset.name as string;
+
+			growthRateStore.set({ ...$growthRateStore, [name]: target.checked });
 		}
 	};
 
 	// Filtering
 	$: species = filterBy(searchFor(data.body, value), {
 		types: $typeStore,
-		colors: $colorStore
+		colors: $colorStore,
+		growthRates: $growthRateStore
 	});
 
 	// Updating
@@ -44,6 +63,9 @@
 			return pokemon[prop].map(({ type }: any) => type?.name) || null;
 		});
 		dictColors = getDict(species, 'color', (pokemon, prop) => {
+			return pokemon[prop]?.name || null;
+		});
+		dictGrowthRates = getDict(species, 'growth_rate', (pokemon, prop) => {
 			return pokemon[prop]?.name || null;
 		});
 	}
@@ -60,6 +82,8 @@
 				{dictTypes}
 				colors={getColors(data.body)}
 				{dictColors}
+				growthRates={getGrowthRates(data.body)}
+				{dictGrowthRates}
 			/>
 		</aside>
 		<section>

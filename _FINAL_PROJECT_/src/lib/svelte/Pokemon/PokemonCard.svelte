@@ -15,13 +15,14 @@
 	import { quintOut } from 'svelte/easing';
 	import Loader from '../Loader.svelte';
 	import { typeStore } from '$lib/ts/$store-sidebar-types';
-	import { colorStore } from '$lib/ts/$store-sidebar-color';
+	import { colorStore } from '$lib/ts/$store-sidebar-colors';
+	import { growthRateStore } from '$lib/ts/$store-sidebar-growth-rates';
 
 	export let pokemon: any;
 	export let value: string;
 </script>
 
-{#if !value && Store.isAllChecked($typeStore) && Store.isAllChecked($colorStore)}
+{#if !value && Store.isAllChecked($typeStore) && Store.isAllChecked($colorStore) && Store.isAllChecked($growthRateStore)}
 	{#await delay(random(250, 1250), pokemon)}
 		<div
 			class="card absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 mask"

@@ -58,11 +58,6 @@ export function formatName(str: string) {
 	return $0;
 }
 
-export function formatWeight(hg: number) {
-	const kg = hg / 10;
-	return kg.toFixed(1) + ' kg';
-}
-
 export function formatSearch(inputText: string, searchText: string) {
 	if (!searchText) return inputText;
 
@@ -72,6 +67,21 @@ export function formatSearch(inputText: string, searchText: string) {
 	const markedText = inputText.replace(regExp, '<mark>$1</mark>');
 
 	return markedText;
+}
+
+export function formatWeight(hg: number) {
+	const kg = hg / 10;
+	return kg.toFixed(1) + ' kg';
+}
+
+export function formatGrowthRate(str: string) {
+	if (str === 'slow') return 'Slow';
+	if (str === 'medium') return 'Medium';
+	if (str === 'fast') return 'Fast';
+	if (str === 'medium-slow') return 'Medium-Slow';
+	if (str === 'slow-then-very-fast') return 'Slow → Fast';
+	if (str === 'fast-then-very-slow') return 'Fast → Slow';
+	return str;
 }
 
 // parsing
@@ -141,6 +151,16 @@ export function filterBy(pokemonList: any[], options: { [key: string]: object })
 		arr = arr.filter((pokemon) => {
 			// @ts-expect-error No matching type
 			return options.colors[pokemon.color.name];
+		});
+	}
+
+	if (options.growthRates) {
+		// @ts-expect-error No matching type
+		if (Store.isEmpty(options.growthRates)) return [];
+
+		arr = arr.filter((pokemon) => {
+			// @ts-expect-error No matching type
+			return options.growthRates[pokemon.growth_rate.name];
 		});
 	}
 
@@ -222,6 +242,15 @@ export function getColors(pokemonList: any[]) {
 	return [...setColors];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getGrowthRates(pokemonList: any[]) {
+	const setGrowthRates = new Set();
+	for (const pokemon of pokemonList) {
+		setGrowthRates.add(pokemon.growth_rate.name);
+	}
+	return [...setGrowthRates];
+}
+
 // ############################################################################ Promise
 export function delay<T>(ms: number, value?: T): Promise<unknown> | Promise<T> {
 	return value === undefined
@@ -247,10 +276,10 @@ export function random(min: number, max: number) {
 // ############################################################################ Store
 // typeStore
 export class Store {
-	static init(types: string[]) {
+	static init(types: string[], value: boolean = true) {
 		const obj: { [key: string]: boolean } = {};
 		for (const type of types) {
-			obj[type] = true;
+			obj[type] = value;
 		}
 		return obj;
 	}
@@ -279,5 +308,17 @@ export class Store {
 			if (!obj[key]) return false;
 		}
 		return true;
+	}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	static toString(store: any, callback?: (arg: string) => string) {
+		const values = Object.entries(store);
+		const names = [];
+
+		for (let i = 0; i < values.length; i++) {
+			const [name, checked] = values[i];
+			if (checked) names.push(name);
+		}
+
+		return callback ? names.map(callback).join(', ') : names.map(toCapitalized).join(', ');
 	}
 }

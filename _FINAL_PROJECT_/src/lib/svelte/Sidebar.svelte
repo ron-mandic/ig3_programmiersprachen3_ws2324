@@ -1,25 +1,26 @@
 <script lang="ts">
 	import * as Accordion from '$lib/components/ui/accordion';
-	import { Store, formatName, toCapitalized } from '$lib/ts/functions';
+	import { Store, formatGrowthRate, formatName, toCapitalized } from '$lib/ts/functions';
 	import { typeStore } from '$lib/ts/$store-sidebar-types';
-	import { colorStore } from '$lib/ts/$store-sidebar-color';
+	import { colorStore } from '$lib/ts/$store-sidebar-colors';
+	import { growthRateStore } from '$lib/ts/$store-sidebar-growth-rates';
 	import { onMount } from 'svelte';
 
 	export let value: string;
 	export let handlers: any;
-	export let placeholder = 'Name or ID';
+	export let placeholder: any = 'Name or ID';
 
 	export let types: any;
 	export let dictTypes: any;
 	export let colors: any;
 	export let dictColors: any;
-
-	let valueLeft = 0;
-	let valueRight = 100;
+	export let growthRates: any;
+	export let dictGrowthRates: any;
 
 	onMount(() => {
 		typeStore.set(Store.init(types));
 		colorStore.set(Store.init(colors));
+		growthRateStore.set(Store.init(growthRates));
 	});
 </script>
 
@@ -31,7 +32,7 @@
 			type="text"
 			name="name"
 			placeholder={`${formatName(toCapitalized(placeholder.name))} or ${placeholder.id}`}
-			class="mb-1 h-full w-full bg-transparent px-4 py-4"
+			class="mb-1 h-full w-full bg-transparent px-4 py-4 placeholder:opacity-60"
 			bind:value
 			on:input={handlers.handleSearchInput}
 		/>
@@ -41,25 +42,37 @@
 			<Accordion.Root>
 				<Accordion.Item value="types">
 					<Accordion.Trigger class="text-xl font-semibold"
-						><h3>
+						><h3 class="relative w-full text-left">
 							Types
-							<span class="text-base font-normal opacity-50"
-								>({Store.getCheckedCount($typeStore)})</span
+							<span
+								class="absolute right-2 top-1/2 min-w-[50%] max-w-[65%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-normal opacity-50"
+								>{Store.getCheckedCount($typeStore)
+									? Store.toString($typeStore)
+									: 'Please select type'}</span
 							>
 						</h3></Accordion.Trigger
 					>
 					<Accordion.Content>
-						<div class="checkboxes flex h-auto w-full flex-col gap-2 px-2 py-2">
+						<div class="checkboxes flex h-auto w-full flex-col gap-2 px-1 py-1">
 							{#each Object.entries($typeStore) as [name, checked]}
-								<label class="flex cursor-pointer items-center justify-start p-2 {name}">
-									<img class="z-1 scale-125" src="/svg/icon-type-{name}.svg" alt={name} />
-									<p class="ml-4 text-lg font-semibold">
-										{toCapitalized(name)}
-										<span class="text-base font-normal opacity-50">({dictTypes[name] || 0})</span>
-									</p>
+								<label
+									class="flex cursor-pointer items-center justify-between p-2 pr-4 {dictTypes[name]
+										? 'opacity-100'
+										: 'opacity-30'} {name}"
+								>
+									<div class="flex items-center justify-center">
+										<img class="z-1 scale-125" src="/svg/icon-type-{name}.svg" alt={name} />
+										<p class="ml-4 text-lg font-semibold">
+											{toCapitalized(name)}
+										</p>
+									</div>
+									<span class="text-right text-base font-normal opacity-50"
+										>{dictTypes[name] || 0}</span
+									>
 									<input
 										type="checkbox"
 										name="type"
+										class="hidden"
 										data-name={name}
 										{checked}
 										on:change={handlers.handleTypeChange}
@@ -76,25 +89,37 @@
 			<Accordion.Root>
 				<Accordion.Item value="colors">
 					<Accordion.Trigger class="text-xl font-semibold"
-						><h3>
+						><h3 class="relative w-full text-left">
 							Colors
-							<span class="text-base font-normal opacity-50"
-								>({Store.getCheckedCount($colorStore)})</span
+							<span
+								class="absolute right-2 top-1/2 min-w-[50%] max-w-[65%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-normal opacity-50"
+								>{Store.getCheckedCount($colorStore)
+									? Store.toString($colorStore)
+									: 'Please select color'}</span
 							>
 						</h3></Accordion.Trigger
 					>
 					<Accordion.Content>
-						<div class="checkboxes flex h-auto w-full flex-col gap-2 px-2 py-2">
+						<div class="checkboxes flex h-auto w-full flex-col gap-2 px-1 py-1">
 							{#each Object.entries($colorStore) as [name, checked]}
-								<label class="flex cursor-pointer items-center justify-start p-2 {name}">
-									<img class="z-1 scale-125" src="/svg/icon-color-{name}.svg" alt={name} />
-									<p class="ml-4 text-lg font-semibold">
-										{toCapitalized(name)}
-										<span class="text-base font-normal opacity-50">({dictColors[name] || 0})</span>
-									</p>
+								<label
+									class="flex cursor-pointer items-center justify-between p-2 pr-4 {dictColors[name]
+										? 'opacity-100'
+										: 'opacity-30'} {name}"
+								>
+									<div class="flex items-center justify-center">
+										<img class="z-1 scale-125" src="/svg/icon-color-{name}.svg" alt={name} />
+										<p class="ml-4 text-lg font-semibold">
+											{toCapitalized(name)}
+										</p>
+									</div>
+									<span class="text-right text-base font-normal opacity-50"
+										>{dictColors[name] || 0}</span
+									>
 									<input
 										type="checkbox"
 										name="color"
+										class="hidden"
 										data-name={name}
 										{checked}
 										on:change={handlers.handleColorChange}
@@ -107,31 +132,49 @@
 			</Accordion.Root>
 		</div>
 
-		<div class="sidebar-layout mb-4 h-auto px-4 py-1">
+		<div class="sidebar-layout h-auto px-4 py-1">
 			<Accordion.Root>
-				<Accordion.Item value="colors">
+				<Accordion.Item value="growth-rate">
 					<Accordion.Trigger class="text-xl font-semibold"
-						><h3>
-							Height
-							<!-- <span class="text-base font-normal opacity-50"
-								>({Store.getCheckedCount($heightStore)})</span
-							> -->
+						><h3 class="relative w-full text-left">
+							Growth rates
+							<span
+								class="absolute right-2 top-1/2 min-w-[30%] max-w-[45%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-normal opacity-50"
+								>{Store.getCheckedCount($growthRateStore)
+									? Store.toString($growthRateStore, formatGrowthRate)
+									: 'Please select rate'}</span
+							>
 						</h3></Accordion.Trigger
 					>
 					<Accordion.Content>
-						<div class="flex h-auto w-full flex-col gap-2 py-2">
-							<div class="range_container">
-								<div class="sliders_control flex items-center justify-center">
+						<div class="checkboxes flex h-auto w-full flex-col gap-2 px-1 py-1">
+							{#each Object.entries($growthRateStore) as [name, checked]}
+								<label
+									class="flex cursor-pointer items-center justify-between p-2 pr-4 {dictGrowthRates[
+										name
+									]
+										? 'opacity-100'
+										: 'opacity-30'} {name}"
+								>
+									<div class="flex items-center justify-center">
+										<img class="z-1 scale-125" src="/svg/icon-growth-rate-{name}.svg" alt={name} />
+										<p class="ml-4 text-lg font-semibold">
+											{formatGrowthRate(name)}
+										</p>
+									</div>
+									<span class="text-right text-base font-normal opacity-50"
+										>{dictGrowthRates[name] || 0}</span
+									>
 									<input
-										style="height: 0; z-index: 1"
-										type="range"
-										min="0"
-										max="100"
-										bind:value={valueLeft}
+										type="checkbox"
+										name="growth-rate"
+										class="hidden"
+										data-name={name}
+										{checked}
+										on:change={handlers.handleGrowthRateChange}
 									/>
-									<input id="toSlider" type="range" min="0" max="100" bind:value={valueRight} />
-								</div>
-							</div>
+								</label>
+							{/each}
 						</div>
 					</Accordion.Content>
 				</Accordion.Item>
@@ -215,55 +258,6 @@
 		// 	--background-color: #4e5634;
 		// 	--color: #a5c432;
 		// }
-	}
-
-	// Credits: https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816
-	.range_container {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		padding: 1rem 0.25rem;
-	}
-
-	.sliders_control {
-		position: relative;
-	}
-
-	input[type='range']::-webkit-slider-thumb {
-		appearance: none;
-		pointer-events: all;
-		width: 1.25rem;
-		height: 1.25rem;
-		@apply bg-primary;
-		border-radius: 50%;
-		cursor: pointer;
-	}
-
-	input[type='range']::-moz-range-thumb {
-		appearance: none;
-		pointer-events: all;
-		width: 24px;
-		height: 24px;
-		background-color: #fff;
-		border-radius: 50%;
-		box-shadow: 0 0 0 1px #c6c6c6;
-		cursor: pointer;
-	}
-
-	input[type='range']::-webkit-slider-thumb:hover {
-		background: #f7f7f7;
-	}
-
-	input[type='range'] {
-		-webkit-appearance: none;
-		appearance: none;
-		height: 0.5rem;
-		width: 100%;
-		background-color: #0000001e;
-		position: absolute;
-		border-radius: 2rem;
-		pointer-events: none;
-		border-radius: 2rem;
 	}
 
 	@media only screen and (min-width: 1052px) {
