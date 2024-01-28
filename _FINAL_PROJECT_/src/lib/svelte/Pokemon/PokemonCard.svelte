@@ -61,11 +61,22 @@
 			<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
 				<div class="cb__top relative">
 					<div class="cbt__image relative h-full w-full">
-						<img
-							class="absolute scale-90"
-							src={sprites.other['official-artwork'].front_default}
-							alt={id}
-						/>
+						{#if sprites.other['official-artwork']}
+							{@const srcFrontDefault = sprites.other['official-artwork'].front_default}
+							{@const srcFrontShiny = sprites.other['official-artwork'].front_shiny}
+
+							{#if srcFrontDefault === null && srcFrontShiny === null}
+								<img
+									class="dark-opacity-100 absolute w-1/2 scale-50 opacity-10 dark:invert-0"
+									src="/svg/icon-error.svg"
+									alt={id}
+								/>
+							{:else if srcFrontDefault === null && srcFrontShiny}
+								<img class="absolute scale-90" src={srcFrontShiny} alt={id} />
+							{:else}
+								<img class="absolute scale-90" src={srcFrontDefault} alt={id} />
+							{/if}
+						{/if}
 					</div>
 					<div class="cbt__types">
 						{#each types as { type }, i}
@@ -154,11 +165,22 @@
 		<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
 			<div class="cb__top relative">
 				<div class="cbt__image relative h-full w-full">
-					<img
-						class="absolute scale-90"
-						src={sprites.other['official-artwork'].front_default}
-						alt={id}
-					/>
+					{#if sprites.other['official-artwork']}
+						{@const srcFrontDefault = sprites.other['official-artwork'].front_default}
+						{@const srcFrontShiny = sprites.other['official-artwork'].front_shiny}
+
+						{#if srcFrontDefault === null && srcFrontShiny === null}
+							<img
+								class="dark-opacity-100 absolute w-1/2 scale-50 opacity-10 dark:invert-0"
+								src="/svg/icon-error.svg"
+								alt={id}
+							/>
+						{:else if srcFrontDefault === null && srcFrontShiny}
+							<img class="absolute scale-90" src={srcFrontShiny} alt={id} />
+						{:else}
+							<img class="absolute scale-90" src={srcFrontDefault} alt={id} />
+						{/if}
+					{/if}
 				</div>
 				<div class="cbt__types">
 					{#each types as { type }, i}

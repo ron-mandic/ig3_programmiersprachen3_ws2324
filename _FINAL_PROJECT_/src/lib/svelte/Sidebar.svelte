@@ -7,12 +7,15 @@
 
 	export let value: string;
 	export let handlers: any;
-	export let placeholder: any;
+	export let placeholder = 'Name or ID';
 
 	export let types: any;
 	export let dictTypes: any;
 	export let colors: any;
 	export let dictColors: any;
+
+	let valueLeft = 0;
+	let valueRight = 100;
 
 	onMount(() => {
 		typeStore.set(Store.init(types));
@@ -91,13 +94,44 @@
 									</p>
 									<input
 										type="checkbox"
-										name="type"
+										name="color"
 										data-name={name}
 										{checked}
 										on:change={handlers.handleColorChange}
 									/>
 								</label>
 							{/each}
+						</div>
+					</Accordion.Content>
+				</Accordion.Item>
+			</Accordion.Root>
+		</div>
+
+		<div class="sidebar-layout mb-4 h-auto px-4 py-1">
+			<Accordion.Root>
+				<Accordion.Item value="colors">
+					<Accordion.Trigger class="text-xl font-semibold"
+						><h3>
+							Height
+							<!-- <span class="text-base font-normal opacity-50"
+								>({Store.getCheckedCount($heightStore)})</span
+							> -->
+						</h3></Accordion.Trigger
+					>
+					<Accordion.Content>
+						<div class="flex h-auto w-full flex-col gap-2 py-2">
+							<div class="range_container">
+								<div class="sliders_control flex items-center justify-center">
+									<input
+										style="height: 0; z-index: 1"
+										type="range"
+										min="0"
+										max="100"
+										bind:value={valueLeft}
+									/>
+									<input id="toSlider" type="range" min="0" max="100" bind:value={valueRight} />
+								</div>
+							</div>
 						</div>
 					</Accordion.Content>
 				</Accordion.Item>
@@ -181,6 +215,55 @@
 		// 	--background-color: #4e5634;
 		// 	--color: #a5c432;
 		// }
+	}
+
+	// Credits: https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816
+	.range_container {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		padding: 1rem 0.25rem;
+	}
+
+	.sliders_control {
+		position: relative;
+	}
+
+	input[type='range']::-webkit-slider-thumb {
+		appearance: none;
+		pointer-events: all;
+		width: 1.25rem;
+		height: 1.25rem;
+		@apply bg-primary;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+
+	input[type='range']::-moz-range-thumb {
+		appearance: none;
+		pointer-events: all;
+		width: 24px;
+		height: 24px;
+		background-color: #fff;
+		border-radius: 50%;
+		box-shadow: 0 0 0 1px #c6c6c6;
+		cursor: pointer;
+	}
+
+	input[type='range']::-webkit-slider-thumb:hover {
+		background: #f7f7f7;
+	}
+
+	input[type='range'] {
+		-webkit-appearance: none;
+		appearance: none;
+		height: 0.5rem;
+		width: 100%;
+		background-color: #0000001e;
+		position: absolute;
+		border-radius: 2rem;
+		pointer-events: none;
+		border-radius: 2rem;
 	}
 
 	@media only screen and (min-width: 1052px) {

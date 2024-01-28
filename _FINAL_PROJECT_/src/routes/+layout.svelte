@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>HfG-Pokémon - /</title>
+	<title>Pokédex - Home</title>
 	<meta name="description" content="HfG-Pokémon - /" />
 </svelte:head>
 

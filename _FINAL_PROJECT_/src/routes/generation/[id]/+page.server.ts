@@ -5,6 +5,8 @@ import type { PageServerLoad, PageServerLoadEvent } from './$types';
 
 export const load: PageServerLoad = async ({ fetch, params }: PageServerLoadEvent) => {
 	try {
+		console.time('Start');
+
 		const generationUrl = BASE_URL + EEndpoints.GENERATION + params.id,
 			generationResponse = await fetch(generationUrl),
 			generationData = await generationResponse.json();
@@ -35,6 +37,7 @@ export const load: PageServerLoad = async ({ fetch, params }: PageServerLoadEven
 			...pokemonSpecies,
 			...pokemonData[i]
 		}));
+		console.timeEnd('Start');
 
 		return {
 			status: 200,
