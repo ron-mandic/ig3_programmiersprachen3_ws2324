@@ -3,12 +3,30 @@
 	import '$lib/scss/styles.scss';
 	import Header from '$lib/svelte/Header.svelte';
 	import Main from '$lib/svelte/Main.svelte';
+	import { page } from '$app/stores';
+	import { storeIsOpen } from '$lib/ts/$store-sidebar';
+	import { fly } from 'svelte/transition';
+
+	let id = $page.params.id;
+
+	export function handleTriggerClick(e: any) {
+		e.preventDefault();
+
+		$storeIsOpen = !$storeIsOpen;
+	}
+
+	export let data;
 </script>
 
 <div id="app">
-	<Header />
+	<Header {id} isOpen={$storeIsOpen} on:click={handleTriggerClick} />
 	<Main>
-		<slot />
+		<!-- Credits: https://joyofcode.xyz/sveltekit-page-transitions -->
+		{#key data.url}
+			<div in:fly={{ x: 100, duration: 300, delay: 300 }} out:fly={{ x: -100, duration: 300 }}>
+				<slot />
+			</div>
+		{/key}
 	</Main>
 </div>
 

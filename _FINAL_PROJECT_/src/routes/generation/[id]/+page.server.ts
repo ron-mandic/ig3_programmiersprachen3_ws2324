@@ -6,7 +6,7 @@ import type { PageServerLoad, PageServerLoadEvent } from './$types';
 export const load: PageServerLoad = async ({ fetch, params }: PageServerLoadEvent) => {
 	try {
 		const generationUrl = BASE_URL + EEndpoints.GENERATION + params.id;
-		const generationData = await fetch(generationUrl).then((res) => res.json());
+		const generationData: any = await fetch(generationUrl).then((res) => res.json());
 
 		// Get the pokemon species url from the generation data
 		const pokemonSpeciesUrls = generationData.pokemon_species.map(
@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ fetch, params }: PageServerLoadEven
 		);
 
 		// Get the pokemon species data
-		const pokemonSpeciesData = await Promise.all(
+		const pokemonSpeciesData: any = await Promise.all(
 			pokemonSpeciesUrls.map((url: string) => fetch(url).then((res) => res.json()))
 		);
 

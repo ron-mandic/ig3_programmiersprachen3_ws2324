@@ -4,7 +4,9 @@
 
 :root {
 	--background: hsl(255, 15%, 95%);
+	--background-alpha: hsla(255, 15%, 95%, 0.5);
 	--foreground: hsl(255, 15%, 5%);
+	--foreground-alpha: hsla(255, 15%, 5%, 0.5);
 
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
@@ -53,6 +55,8 @@ mark {
 @media (prefers-color-scheme: dark) {
 	:root {
 		--background: #14141f;
+		--background-alpha: #14141f79;
 		--foreground: #f0f0f5;
+		--foreground-alpha: #f0f0f580;
 	}
 }

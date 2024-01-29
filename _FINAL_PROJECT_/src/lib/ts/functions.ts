@@ -110,6 +110,19 @@ export function parseToRoman(url: string): string | null {
 	return null;
 }
 
+// You get a roman number and then you have to convert it to an integer
+export function parseToInteger(romanNumeral: string): number | undefined {
+	if (romanNumeral === 'i') return 1;
+	if (romanNumeral === 'ii') return 2;
+	if (romanNumeral === 'iii') return 3;
+	if (romanNumeral === 'iv') return 4;
+	if (romanNumeral === 'v') return 5;
+	if (romanNumeral === 'vi') return 6;
+	if (romanNumeral === 'vii') return 7;
+	if (romanNumeral === 'viii') return 8;
+	if (romanNumeral === 'ix') return 9;
+}
+
 // extracting
 export function extractNumber(url: string): number | null {
 	const match = url.match(/\/(\d+)\/$/);

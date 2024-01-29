@@ -17,8 +17,17 @@
 	import { growthRateStore } from '$lib/ts/$store-sidebar-growth-rates';
 	import { stageStore } from '$lib/ts/$store-sidebar-stages';
 
+	import { storeIsOpen } from '$lib/ts/$store-sidebar';
+	import { onMount } from 'svelte';
+
 	export let data: any;
 	export let page: any;
+
+	let isDesktop;
+
+	onMount(() => {
+		isDesktop = window.innerWidth > 1052;
+	});
 
 	// Props
 	let searchValue = $page.url.searchParams.get('search') || '';
@@ -27,8 +36,6 @@
 	let dictColors: any;
 	let dictGrowthRates: any;
 	let dictStages: any;
-
-	console.log(data.body);
 
 	const handlers = {
 		handleSearchInput(event: any) {
@@ -99,7 +106,7 @@
 
 <div class="frame">
 	<div class="layout h-full w-full pb-4">
-		<aside>
+		<aside class:open={$storeIsOpen}>
 			<Sidebar
 				bind:searchValue
 				placeholder={getRandom(data.body)}
@@ -194,14 +201,22 @@
 	}
 
 	aside {
-		display: none; // TODO: Make responsive and mobile friendly
+		display: block;
 		position: fixed;
 		top: calc(100px - 0.175rem);
 		left: 0.5rem;
 		width: min(90vw, 400px);
 		height: calc(100svh - 100px + 0.175rem);
 		padding: 0.675rem 1rem 0.375rem 0;
+		transform: translateX(-100%);
+		transition: transform 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+		min-width: 320px;
 		z-index: 999;
+
+		&.open {
+			transform: translateX(0);
+			transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		}
 	}
 
 	section {
@@ -279,10 +294,12 @@
 				top: 100px;
 				left: 0;
 				width: 320px;
+				transform: translateX(0) !important;
 				height: calc(100svh - 100px);
 				flex: 0 0 var(--flex-basis);
 				padding: 0.675rem 1rem 0.675rem 0;
 				z-index: 2;
+				min-width: unset;
 			}
 		}
 	}

@@ -1,17 +1,36 @@
+<script lang="ts">
+	import { parseToInteger, toCapitalized } from '$lib/ts/functions.js';
+
+	export let data;
+	console.log(data.body);
+</script>
+
 <svelte:head>
 	<title>Pokémon - Home</title>
 	<meta name="description" content="Pokédex - Home" />
 </svelte:head>
 
 <div class="rootFrame">
-	<h1 class="absolute max-w-[600px] p-5 text-7xl font-bold">
-		Welcome to the <wbr /> unoffical Pokédex
-	</h1>
+	<h1 class="absolute max-w-[600px] p-5 text-7xl font-bold">Generations</h1>
 	<div class="relative">
 		<div class="layouts">
-			<a class="layout h-full mask" href="/generation/">
-				<h2 class="px1 py-1 text-3xl font-semibold">Generations</h2>
-			</a>
+			{#each data.body.results as { name, url }}
+				{#if url}
+					{@const romanNumeral = name.split('-')[1]}
+					{@const id = parseToInteger(romanNumeral)}
+					<a class="layout h-full mask" href="/generation/{id}">
+						<h2 class="px1 py-1 text-3xl font-semibold">
+							{name
+								.split('-')
+								.map((word, i) => {
+									if (i === 0) return toCapitalized(word);
+									else return word.toUpperCase();
+								})
+								.join(' ')}
+						</h2>
+					</a>
+				{/if}
+			{/each}
 		</div>
 	</div>
 </div>
@@ -31,7 +50,6 @@
 			width: 100%;
 			height: 100%;
 			max-height: 100svh;
-			max-width: 1920px;
 		}
 	}
 
@@ -45,24 +63,28 @@
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
-		gap: 2rem;
-		left: 1rem;
-		right: 1rem;
+		gap: 1rem;
+		left: 0rem;
+		right: 0rem;
 		bottom: 1rem;
-		width: calc(100% - 2rem) !important;
+		padding: 1rem;
+		width: 100% !important;
 		height: 200px !important;
 		overflow-y: hidden;
 		overflow-x: scroll;
+		scroll-snap-type: x mandatory;
 	}
 
 	.layout {
 		padding: 1.25rem 1.75rem;
 		width: 100%;
+		min-width: 320px;
 
 		background-color: var(--background-alpha);
 		border-radius: 1.5rem;
 		backdrop-filter: blur(30px);
 		transition: scale 0.25s ease-in-out;
+		scroll-snap-align: center;
 
 		&:hover {
 			scale: 1.05;

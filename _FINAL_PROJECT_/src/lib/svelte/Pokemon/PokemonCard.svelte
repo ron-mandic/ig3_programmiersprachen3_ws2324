@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-	{:then { name, id, sprites, height, weight, stats, types }}
+	{:then { name, id, sprites, height, weight, stats, types, flavor_text_entries }}
 		<div
 			class="card loaded relative h-full w-full cursor-pointer"
 			class:flipped
@@ -158,9 +158,15 @@
 						<div
 							style="background-color: var(--bg-color__02); border-radius: calc(1.5rem - 0.5rem);"
 						>
-							<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%;">
-								{formatFlavorTextEntry(getRandomFlavorTextEntry(pokemon, 'en'))}
-							</p>
+							{#if flavor_text_entries.length > 0}
+								<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%;">
+									{formatFlavorTextEntry(getRandomFlavorTextEntry(pokemon, 'en'))}
+								</p>
+							{:else}
+								<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%; opacity: .4">
+									No text available
+								</p>
+							{/if}
 						</div>
 					</div>
 					<div class="cb__top absolute">
@@ -214,7 +220,7 @@
 		</div>
 	{/await}
 {:else}
-	{@const { name, id, sprites, height, weight, stats, types } = pokemon}
+	{@const { name, id, sprites, height, weight, stats, types, flavor_text_entries } = pokemon}
 
 	<div
 		class="card loaded relative h-full w-full cursor-pointer"
@@ -313,9 +319,15 @@
 						{@html formatSearch(formatName(toCapitalized(name)), searchValue)}
 					</h2>
 					<div style="background-color: var(--bg-color__02); border-radius: calc(1.5rem - 0.5rem);">
-						<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%;">
-							{formatFlavorTextEntry(getRandomFlavorTextEntry(pokemon, 'en'))}
-						</p>
+						{#if flavor_text_entries.length > 0}
+							<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%;">
+								{formatFlavorTextEntry(getRandomFlavorTextEntry(pokemon, 'en'))}
+							</p>
+						{:else}
+							<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%; opacity: .4">
+								No text available
+							</p>
+						{/if}
 					</div>
 				</div>
 				<div class="cb__top absolute">
