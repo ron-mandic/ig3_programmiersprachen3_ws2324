@@ -28,6 +28,8 @@
 	let dictGrowthRates: any;
 	let dictStages: any;
 
+	console.log(data.body);
+
 	const handlers = {
 		handleSearchInput(event: any) {
 			const target = event.target as HTMLInputElement;

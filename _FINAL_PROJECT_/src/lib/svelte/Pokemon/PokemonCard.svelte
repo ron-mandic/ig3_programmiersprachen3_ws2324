@@ -9,7 +9,9 @@
 		random,
 		formatSearch,
 		isId,
-		Store
+		Store,
+		getRandomFlavorTextEntry,
+		formatFlavorTextEntry
 	} from '$lib/ts/functions';
 	import { fly, blur } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
@@ -23,6 +25,8 @@
 	export let pokemon: any;
 	export let searchValue: string;
 	export let sortValue: string | null;
+
+	let flipped = false;
 </script>
 
 {#if ($page.url.searchParams.get('search') || !searchValue) && Store.isAllChecked($typeStore) && Store.isAllChecked($colorStore) && Store.isAllChecked($growthRateStore) && Store.isAll($stageStore, -1) && sortValue === null}
@@ -50,7 +54,11 @@
 		</div>
 	{:then { name, id, sprites, height, weight, stats, types }}
 		<div
-			class="card z-1000 relative h-full w-full mask"
+			class="card loaded relative h-full w-full cursor-pointer"
+			class:flipped
+			role="button"
+			aria-roledescription="flip card"
+			tabindex="0"
 			transition:fly={{
 				delay: random(250, 500),
 				duration: 500,
@@ -58,7 +66,173 @@
 				y: random(20, 50),
 				easing: quintOut
 			}}
+			on:click={() => {
+				flipped = !flipped;
+			}}
+			on:keyup={(e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					flipped = !flipped;
+				}
+			}}
 		>
+			<div class="front">
+				<div class="ch__hp flex items-center justify-center">
+					<p><span>HP</span><span>{stats[0].base_stat}</span></p>
+				</div>
+				<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
+					<div class="cb__top relative">
+						<div class="cbt__image relative h-full w-full">
+							{#if sprites.other['official-artwork']}
+								{@const srcFrontDefault = sprites.other['official-artwork'].front_default}
+								{@const srcFrontShiny = sprites.other['official-artwork'].front_shiny}
+
+								{#if srcFrontDefault === null && srcFrontShiny === null}
+									<img
+										class="dark-opacity-100 absolute w-1/2 scale-50 opacity-10 dark:invert-0"
+										src="/svg/icon-error.svg"
+										alt={id}
+									/>
+								{:else if srcFrontDefault === null && srcFrontShiny}
+									<img class="absolute scale-90" src={srcFrontShiny} alt={id} />
+								{:else}
+									<img class="absolute scale-90" src={srcFrontDefault} alt={id} />
+								{/if}
+							{/if}
+						</div>
+						<div class="cbt__types">
+							{#each types as { type }, i}
+								<div class="type {type.name}" style:--z-index={types.length - i}></div>
+							{/each}
+						</div>
+					</div>
+					<div class="cb__bottom">
+						<div class="cbb__layout h-full w-full">
+							<div class="cbb__head">
+								<small
+									>{#if isId(searchValue)}
+										{@html formatSearch(formatId(id), searchValue)}
+									{:else}
+										{formatId(id)}
+									{/if}</small
+								>
+								<h2 class="relative" class:m={name.endsWith('-m')} class:f={name.endsWith('-f')}>
+									{#if !isId(searchValue)}
+										{@html formatSearch(formatName(toCapitalized(name)), searchValue)}
+									{:else}
+										{formatName(toCapitalized(name))}
+									{/if}
+								</h2>
+							</div>
+							<div class="cbb__body">
+								<div class="row">
+									<div class="col">
+										<h3 class="cbbb__head">Height</h3>
+										<p class="cbbb__body">{formatHeight(height)}</p>
+									</div>
+									<div class="col">
+										<h3 class="cbbb__head">Attack</h3>
+										<p class="cbbb__body">{stats[1]['base_stat']}</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<h3 class="cbbb__head">Weight</h3>
+										<p class="cbbb__body">{formatWeight(weight)}</p>
+									</div>
+									<div class="col">
+										<h3 class="cbbb__head">Defense</h3>
+										<p class="cbbb__body">{stats[2]['base_stat']}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="back">
+				<div class="card__body items-between relative flex h-full w-full flex-col justify-start">
+					<div class="cbb__head" style="padding: 2.37% 2.37% 0 2.37%; z-index: 1000;">
+						<h2 class="relative px-[7%] py-[5%]">
+							{@html formatSearch(formatName(toCapitalized(name)), searchValue)}
+						</h2>
+						<div
+							style="background-color: var(--bg-color__02); border-radius: calc(1.5rem - 0.5rem);"
+						>
+							<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%;">
+								{formatFlavorTextEntry(getRandomFlavorTextEntry(pokemon, 'en'))}
+							</p>
+						</div>
+					</div>
+					<div class="cb__top absolute">
+						<div class="cbt__image original relative">
+							{#if sprites.other['official-artwork']}
+								{@const srcFrontDefault = sprites.other['official-artwork'].front_default}
+								{@const srcFrontShiny = sprites.other['official-artwork'].front_shiny}
+
+								{#if srcFrontDefault === null && srcFrontShiny === null}
+									<img
+										class="dark-opacity-100 absolute w-1/2 scale-50 opacity-10 dark:invert-0"
+										src="/svg/icon-error.svg"
+										alt={id}
+									/>
+								{:else if srcFrontDefault === null && srcFrontShiny}
+									<img class="absolute blur-md" src={srcFrontShiny} alt={id} />
+								{:else}
+									<img class="absolute blur-md" src={srcFrontDefault} alt={id} />
+								{/if}
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{:catch error}
+		<div class="card relative h-full w-full mask">
+			<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
+				<div class="cb__top relative">
+					<div class="cbt__image relative flex h-full w-full items-center justify-center">
+						<img
+							class="absolute scale-50 opacity-5 invert-0 dark:opacity-30"
+							src="/svg/icon-error.svg"
+							alt="Error"
+						/>
+					</div>
+				</div>
+				<div class="cb__bottom">
+					<div class="cbb__layout h-full w-full">
+						<div class="cbb__body">
+							<div class="row">
+								<div class="col">
+									<h3 class="cbbb__head">Pika-pi?</h3>
+									<p class="cbbb__body" style="margin-top: 7%;">{error.message}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{/await}
+{:else}
+	{@const { name, id, sprites, height, weight, stats, types } = pokemon}
+
+	<div
+		class="card loaded relative h-full w-full cursor-pointer"
+		class:flipped
+		role="button"
+		aria-roledescription="flip card"
+		tabindex="0"
+		on:click={() => {
+			console.log('click');
+			flipped = !flipped;
+		}}
+		on:keyup={(e) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				flipped = !flipped;
+			}
+		}}
+	>
+		<div class="front">
 			<div class="ch__hp flex items-center justify-center">
 				<p><span>HP</span><span>{stats[0].base_stat}</span></p>
 			</div>
@@ -132,105 +306,36 @@
 				</div>
 			</div>
 		</div>
-	{:catch error}
-		<div class="card relative h-full w-full mask">
-			<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
-				<div class="cb__top relative">
-					<div class="cbt__image relative flex h-full w-full items-center justify-center">
-						<img
-							class="absolute scale-50 opacity-5 invert-0 dark:opacity-30"
-							src="/svg/icon-error.svg"
-							alt="Error"
-						/>
+		<div class="back">
+			<div class="card__body items-between relative flex h-full w-full flex-col justify-start">
+				<div class="cbb__head" style="padding: 2.37% 2.37% 0 2.37%; z-index: 1000;">
+					<h2 class="relative px-[7%] py-[5%]">
+						{@html formatSearch(formatName(toCapitalized(name)), searchValue)}
+					</h2>
+					<div style="background-color: var(--bg-color__02); border-radius: calc(1.5rem - 0.5rem);">
+						<p style="line-height: 1.5; font-weight: 400; padding: 6% 6%;">
+							{formatFlavorTextEntry(getRandomFlavorTextEntry(pokemon, 'en'))}
+						</p>
 					</div>
 				</div>
-				<div class="cb__bottom">
-					<div class="cbb__layout h-full w-full">
-						<div class="cbb__body">
-							<div class="row">
-								<div class="col">
-									<h3 class="cbbb__head">Pika-pi?</h3>
-									<p class="cbbb__body" style="margin-top: 7%;">{error.message}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	{/await}
-{:else}
-	{@const { name, id, sprites, height, weight, stats, types } = pokemon}
+				<div class="cb__top absolute">
+					<div class="cbt__image original relative">
+						{#if sprites.other['official-artwork']}
+							{@const srcFrontDefault = sprites.other['official-artwork'].front_default}
+							{@const srcFrontShiny = sprites.other['official-artwork'].front_shiny}
 
-	<div class="card z-1000 relative h-full w-full mask">
-		<div class="ch__hp flex items-center justify-center">
-			<p><span>HP</span><span>{stats[0].base_stat}</span></p>
-		</div>
-		<div class="card__body items-between relative flex h-full w-full flex-col justify-center">
-			<div class="cb__top relative">
-				<div class="cbt__image relative h-full w-full">
-					{#if sprites.other['official-artwork']}
-						{@const srcFrontDefault = sprites.other['official-artwork'].front_default}
-						{@const srcFrontShiny = sprites.other['official-artwork'].front_shiny}
-
-						{#if srcFrontDefault === null && srcFrontShiny === null}
-							<img
-								class="dark-opacity-100 absolute w-1/2 scale-50 opacity-10 dark:invert-0"
-								src="/svg/icon-error.svg"
-								alt={id}
-							/>
-						{:else if srcFrontDefault === null && srcFrontShiny}
-							<img class="absolute scale-90" src={srcFrontShiny} alt={id} />
-						{:else}
-							<img class="absolute scale-90" src={srcFrontDefault} alt={id} />
-						{/if}
-					{/if}
-				</div>
-				<div class="cbt__types">
-					{#each types as { type }, i}
-						<div class="type {type.name}" style:--z-index={types.length - i}></div>
-					{/each}
-				</div>
-			</div>
-			<div class="cb__bottom">
-				<div class="cbb__layout h-full w-full">
-					<div class="cbb__head">
-						<small
-							>{#if isId(searchValue)}
-								{@html formatSearch(formatId(id), searchValue)}
+							{#if srcFrontDefault === null && srcFrontShiny === null}
+								<img
+									class="dark-opacity-100 absolute w-1/2 scale-50 opacity-10 dark:invert-0"
+									src="/svg/icon-error.svg"
+									alt={id}
+								/>
+							{:else if srcFrontDefault === null && srcFrontShiny}
+								<img class="absolute blur-md" src={srcFrontShiny} alt={id} />
 							{:else}
-								{formatId(id)}
-							{/if}</small
-						>
-						<h2 class="relative" class:m={name.endsWith('-m')} class:f={name.endsWith('-f')}>
-							{#if !isId(searchValue)}
-								{@html formatSearch(formatName(toCapitalized(name)), searchValue)}
-							{:else}
-								{formatName(toCapitalized(name))}
+								<img class="absolute blur-md" src={srcFrontDefault} alt={id} />
 							{/if}
-						</h2>
-					</div>
-					<div class="cbb__body">
-						<div class="row">
-							<div class="col">
-								<h3 class="cbbb__head">Height</h3>
-								<p class="cbbb__body">{formatHeight(height)}</p>
-							</div>
-							<div class="col">
-								<h3 class="cbbb__head">Attack</h3>
-								<p class="cbbb__body">{stats[1]['base_stat']}</p>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h3 class="cbbb__head">Weight</h3>
-								<p class="cbbb__body">{formatWeight(weight)}</p>
-							</div>
-							<div class="col">
-								<h3 class="cbbb__head">Defense</h3>
-								<p class="cbbb__body">{stats[2]['base_stat']}</p>
-							</div>
-						</div>
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -268,7 +373,40 @@
 		background-clip: padding-box, border-box;
 		background-origin: padding-box, border-box;
 
-		container: card / inline-size;
+		user-select: none;
+		pointer-events: auto;
+
+		&:focus,
+		&:focus-within {
+			outline: none;
+		}
+
+		&.loaded {
+			transform: rotateY(0);
+			transition: transform 0.4s;
+			transform-style: preserve-3d;
+
+			&.flipped {
+				transform: rotateY(-180deg);
+			}
+		}
+	}
+
+	.front,
+	.back {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		backface-visibility: hidden;
+		border-radius: 1.5rem;
+	}
+
+	.back {
+		transform: rotateY(180deg);
+		background-color: var(--bg-color);
+		overflow: hidden;
 	}
 
 	.ch__hp {
@@ -289,7 +427,7 @@
 		border-left: 0.125rem solid var(--color__03);
 		border-bottom: 0.125rem solid var(--color__03);
 		border-radius: 0 0 25% 0;
-		user-select: none;
+		border-top-left-radius: 1.5rem;
 
 		span {
 			color: var(--text-color__name);
@@ -403,7 +541,6 @@
 		.cbt__image {
 			background-color: var(--bg-color__02);
 			border-radius: calc(1.5rem - 0.5rem);
-			user-select: none;
 
 			img {
 				position: absolute;
@@ -413,6 +550,14 @@
 				width: 85%;
 				height: auto;
 				z-index: 99;
+			}
+
+			&.original img {
+				translate: -50% 90%;
+				width: 100%;
+				height: auto;
+				opacity: 0.125;
+				scale: 1 !important;
 			}
 		}
 

@@ -36,6 +36,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			perspective: 100vh;
 		}
 	}
 

@@ -5,11 +5,6 @@
 	import Main from '$lib/svelte/Main.svelte';
 </script>
 
-<svelte:head>
-	<title>Pokédex - Home</title>
-	<meta name="description" content="HfG-Pokémon - /" />
-</svelte:head>
-
 <div id="app">
 	<Header />
 	<Main>

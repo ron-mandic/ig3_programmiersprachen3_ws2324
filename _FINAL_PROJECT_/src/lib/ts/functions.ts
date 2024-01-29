@@ -122,6 +122,20 @@ export function extractNumber(url: string): number | null {
 	return null;
 }
 
+export function formatFlavorTextEntry(sentence: string) {
+	return (
+		sentence
+			.replaceAll('PokéMon', 'Pokémon')
+			.replaceAll(/\\n/g, ' ')
+			.replaceAll(/\\f/g, ' ')
+			// eslint-disable-next-line no-control-regex
+			.replace(/[\x00-\x1F\x7F-\x9F]/g, ' ')
+			.replaceAll(/\b[A-Z]+\b/g, (match) =>
+				toCapitalized(match.toLocaleLowerCase('en-US').replace(/./g, '$&'))
+			)
+	);
+}
+
 // ############################################################################ Boolean
 export function isId(arg: string) {
 	return !isNaN(parseInt(arg, 10));
@@ -329,6 +343,18 @@ export function random(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// ############################################################################ Object
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getPokemonStats(stats: any[]) {
+	const hp = stats.find((stat) => stat.stat.name === 'hp').base_stat;
+	const attack = stats.find((stat) => stat.stat.name === 'attack').base_stat;
+	const defense = stats.find((stat) => stat.stat.name === 'defense').base_stat;
+	const specialAttack = stats.find((stat) => stat.stat.name === 'special-attack').base_stat;
+	const specialDefense = stats.find((stat) => stat.stat.name === 'special-defense').base_stat;
+	const speed = stats.find((stat) => stat.stat.name === 'speed').base_stat;
+	return { hp, attack, defense, specialAttack, specialDefense, speed };
+}
+
 // ############################################################################ Functions
 export function getSortingAlgorithm(sortValue: string) {
 	switch (sortValue) {
@@ -407,6 +433,17 @@ export class Store {
 	}
 }
 
+// ############################################################################ Pokémon
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getRandomFlavorTextEntry(pokemon: any, language = 'en') {
+	const entries = pokemon.flavor_text_entries.filter(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(entry: any) => entry.language.name === language
+	);
+	const index = random(0, entries.length - 1);
+	return entries[index].flavor_text;
+}
+
 export function formatStages(objStages: { [key: string]: -1 | 0 | 1 }) {
 	/**
 	 * labels: is_baby, is_legendary, is_mythical
@@ -418,7 +455,7 @@ export function formatStages(objStages: { [key: string]: -1 | 0 | 1 }) {
 	const { is_baby, is_legendary, is_mythical } = objStages;
 
 	// Guard clauses
-	if (is_baby === -1 && is_legendary === -1 && is_mythical === -1) return 'Unspecified';
+	if (is_baby === -1 && is_legendary === -1 && is_mythical === -1) return 'All unset';
 	if (
 		(is_baby === 0 && is_legendary === -1 && is_mythical === -1) ||
 		(is_baby === 0 && is_legendary === 1 && is_mythical === 1)
