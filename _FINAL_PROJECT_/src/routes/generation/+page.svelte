@@ -8,8 +8,8 @@
 </script>
 
 <svelte:head>
-	<title>Pokémon - Home</title>
-	<meta name="description" content="Pokédex - Home" />
+	<title>Pokémon - Generations</title>
+	<meta name="description" content="Pokédex - Generations" />
 </svelte:head>
 
 <div class="rootFrame">

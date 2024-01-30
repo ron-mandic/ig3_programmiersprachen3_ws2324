@@ -8,8 +8,8 @@
 </script>
 
 <svelte:head>
-	<title>Pokémon - Generations {generation}</title>
-	<meta name="description" content="Pokédex - Generations {generation}" />
+	<title>Pokémon - Generation {generation}</title>
+	<meta name="description" content="Pokédex - Generation {generation}" />
 </svelte:head>
 
 <svelte:body
