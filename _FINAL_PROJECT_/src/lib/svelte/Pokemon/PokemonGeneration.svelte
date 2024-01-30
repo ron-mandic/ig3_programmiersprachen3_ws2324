@@ -96,10 +96,12 @@
 		});
 		dictStages = getDictStages(species);
 	}
+
+	let id = $page.params.id;
 </script>
 
 <h1 class="translate-y-[250px] pl-6 text-6xl font-bold">
-	Generation {$page.params.id}
+	Generation {id}
 </h1>
 <div class="frame">
 	<div class="layout h-full w-full pb-4">
