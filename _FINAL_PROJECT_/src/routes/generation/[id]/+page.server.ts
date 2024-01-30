@@ -6,6 +6,7 @@ import type { PageServerLoad, PageServerLoadEvent } from './$types';
 export const load: PageServerLoad = async ({ fetch, params }: PageServerLoadEvent) => {
 	try {
 		const generationUrl = BASE_URL + EEndpoints.GENERATION + params.id;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const generationData: any = await fetch(generationUrl).then((res) => res.json());
 
 		// Get the pokemon species url from the generation data
@@ -14,6 +15,7 @@ export const load: PageServerLoad = async ({ fetch, params }: PageServerLoadEven
 		);
 
 		// Get the pokemon species data
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const pokemonSpeciesData: any = await Promise.all(
 			pokemonSpeciesUrls.map((url: string) => fetch(url).then((res) => res.json()))
 		);
@@ -26,11 +28,13 @@ export const load: PageServerLoad = async ({ fetch, params }: PageServerLoadEven
 		);
 
 		// Sort the pokemon species data and pokemon data by id
-		pokemonSpeciesData.sort((a, b) => a.id - b.id);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		pokemonSpeciesData.sort((a: any, b: any) => a.id - b.id);
 		pokemonData.sort((a, b) => a.id - b.id);
 
 		// Merge the pokemon species data and pokemon data into one object
-		const data = pokemonSpeciesData.map((pokemonSpecies, i) => ({
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const data = pokemonSpeciesData.map((pokemonSpecies: any, i: any) => ({
 			...pokemonSpecies,
 			...pokemonData[i]
 		}));

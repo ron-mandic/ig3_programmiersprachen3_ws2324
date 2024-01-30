@@ -2,8 +2,6 @@
 	import { page } from '$app/stores';
 	export let id: number | string;
 	export let isOpen: boolean;
-
-	console.log($page);
 </script>
 
 <header class="z-999 fixed left-0 top-0 flex h-[100px] w-full items-center justify-between px-3">

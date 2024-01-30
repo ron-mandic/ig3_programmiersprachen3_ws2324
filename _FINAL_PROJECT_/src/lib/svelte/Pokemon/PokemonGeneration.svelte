@@ -10,7 +10,8 @@
 		getDict,
 		getGrowthRates,
 		getDictStages,
-		getSortingAlgorithm
+		getSortingAlgorithm,
+		parseToRoman
 	} from '$lib/ts/functions';
 	import { typeStore } from '$lib/ts/$store-sidebar-types';
 	import { colorStore } from '$lib/ts/$store-sidebar-colors';
@@ -18,16 +19,9 @@
 	import { stageStore } from '$lib/ts/$store-sidebar-stages';
 
 	import { storeIsOpen } from '$lib/ts/$store-sidebar';
-	import { onMount } from 'svelte';
 
 	export let data: any;
 	export let page: any;
-
-	let isDesktop;
-
-	onMount(() => {
-		isDesktop = window.innerWidth > 1052;
-	});
 
 	// Props
 	let searchValue = $page.url.searchParams.get('search') || '';
@@ -104,6 +98,9 @@
 	}
 </script>
 
+<h1 class="translate-y-[250px] pl-6 text-6xl font-bold">
+	Generation {$page.params.id}
+</h1>
 <div class="frame">
 	<div class="layout h-full w-full pb-4">
 		<aside class:open={$storeIsOpen}>
@@ -194,6 +191,21 @@
 </div>
 
 <style lang="scss">
+	h1 {
+		position: relative;
+		font-size: 290%;
+		max-width: 100%;
+
+		&::before {
+			content: attr(data-roman);
+			position: absolute;
+			bottom: -6rem;
+			left: 2rem;
+			font-size: 150%;
+			opacity: 0.12;
+		}
+	}
+
 	.layout {
 		--flex-basis: clamp(350px, 25%, 400px);
 		margin-top: clamp(500px, 20vh, 70svh);
@@ -234,7 +246,7 @@
 	.radio label {
 		transition: all 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
 
-		--background-color: #ffffff18;
+		--background-color: #00000027;
 
 		&:hover {
 			background-color: var(--background-color);
@@ -250,7 +262,7 @@
 		width: calc(100vw - 2.25rem);
 		& > div {
 			border-radius: 15rem;
-			border: 2px solid #ffffff0e;
+			border: 2px solid #00000009;
 		}
 		label {
 			width: max-content;
@@ -275,6 +287,9 @@
 	}
 
 	@media only screen and (min-width: 549px) {
+		h1 {
+			font-size: 4rem;
+		}
 		.radio {
 			width: auto;
 			label {
@@ -300,6 +315,19 @@
 				padding: 0.675rem 1rem 0.675rem 0;
 				z-index: 2;
 				min-width: unset;
+			}
+		}
+	}
+
+	// prefers-color-scheme
+	@media (prefers-color-scheme: dark) {
+		.radio label {
+			--background-color: #ffffff18;
+		}
+
+		.radio {
+			& > div {
+				border: 2px solid #ffffff0e;
 			}
 		}
 	}

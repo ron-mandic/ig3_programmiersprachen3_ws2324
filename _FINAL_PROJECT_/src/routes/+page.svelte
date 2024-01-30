@@ -1,3 +1,8 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	console.log($page);
+</script>
+
 <svelte:head>
 	<title>Pokémon - Home</title>
 	<meta name="description" content="Pokédex - Home" />
@@ -45,22 +50,26 @@
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
-		gap: 2rem;
-		left: 1rem;
-		right: 1rem;
-		bottom: 1rem;
-		width: calc(100% - 2rem) !important;
+		gap: 1rem;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 1rem;
+		width: 100% !important;
 		height: 200px !important;
 		overflow-y: hidden;
 		overflow-x: scroll;
 	}
 
 	.layout {
+		position: relative;
 		padding: 1.25rem 1.75rem;
 		width: 100%;
 
-		background-color: var(--background-alpha);
+		background-color: #ccc;
 		border-radius: 1.5rem;
+		backdrop-filter: blur(30px);
+		border: 2px solid #aaa;
 		backdrop-filter: blur(30px);
 		transition: scale 0.25s ease-in-out;
 
@@ -82,7 +91,7 @@
 			width: 30%;
 			height: auto;
 			aspect-ratio: 1;
-			transform: translate(-50%, -45%);
+			transform: translate(calc(-50% - 2rem), -50%);
 			z-index: 1000;
 			filter: invert(1);
 			mix-blend-mode: overlay;
@@ -94,6 +103,13 @@
 	@media screen and (min-width: 768px) {
 		.layout {
 			width: 400px !important;
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.layout {
+			background-color: var(--background-alpha);
+			border: 4px solid #11111123;
 		}
 	}
 </style>

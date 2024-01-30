@@ -43,7 +43,7 @@
 			type="text"
 			name="name"
 			placeholder={`${formatName(toCapitalized(placeholder.name))} or ${placeholder.id}`}
-			class="mb-1 h-full w-full bg-transparent px-4 py-4 placeholder:opacity-60"
+			class="mb-1 h-full w-full bg-transparent px-4 py-4 placeholder:opacity-80"
 			bind:value={searchValue}
 			on:input={handlers.handleSearchInput}
 		/>
@@ -57,7 +57,7 @@
 						><h3 class="relative w-full text-left">
 							Types
 							<span
-								class="absolute right-2 top-1/2 min-w-[50%] max-w-[65%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-normal opacity-50"
+								class="absolute right-2 top-1/2 min-w-[50%] max-w-[68%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-medium opacity-50"
 								>{Store.getCheckedCount($typeStore)
 									? Store.toString($typeStore)
 									: 'Please select type'}</span
@@ -104,7 +104,7 @@
 						><h3 class="relative w-full text-left">
 							Colors
 							<span
-								class="absolute right-2 top-1/2 min-w-[50%] max-w-[65%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-normal opacity-50"
+								class="absolute right-2 top-1/2 min-w-[50%] max-w-[65%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-medium opacity-50"
 								>{Store.getCheckedCount($colorStore)
 									? Store.toString($colorStore)
 									: 'Please select color'}</span
@@ -151,7 +151,7 @@
 						><h3 class="relative w-full text-left">
 							Growth rates
 							<span
-								class="absolute right-2 top-1/2 min-w-[30%] max-w-[45%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-normal opacity-50"
+								class="absolute right-2 top-1/2 min-w-[30%] max-w-[40%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-medium opacity-50"
 								>{Store.getCheckedCount($growthRateStore)
 									? Store.toString($growthRateStore, formatGrowthRate)
 									: 'Please select rate'}</span
@@ -199,7 +199,7 @@
 					<Accordion.Trigger class="text-xl font-semibold"
 						><h3 class="relative w-full text-left">
 							Stages <span
-								class="absolute right-2 top-1/2 min-w-[50%] max-w-[65%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-normal opacity-50"
+								class="absolute right-2 top-1/2 min-w-[50%] max-w-[75%] -translate-y-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-right text-base font-medium opacity-50"
 								>{formatStages($stageStore)}</span
 							>
 						</h3></Accordion.Trigger
@@ -386,11 +386,11 @@
 		#sidebar-search {
 			background-color: rgba(var(--bg-color__sidebar-rgb), 0.75);
 			backdrop-filter: blur(50px);
-			outline: 2px solid #ffffff0e;
+			outline: 2px solid #0000000c;
 
 			&:focus,
 			&:active {
-				outline: 2px solid #ffffff49;
+				outline: 2px solid #00000049;
 			}
 		}
 	}
@@ -422,7 +422,7 @@
 	.radio label {
 		transition: all 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
 
-		--background-color: #ffffff18;
+		--background-color: #0000001e;
 
 		&:hover {
 			background-color: var(--background-color);
@@ -437,7 +437,7 @@
 	.radio {
 		& > div {
 			border-radius: 15rem;
-			border: 2px solid #ffffff0e;
+			border: 2px solid #00000009;
 		}
 	}
 
@@ -448,7 +448,7 @@
 	.checkboxes label {
 		border-radius: 10rem;
 		&:has(input:checked) {
-			outline: 3px solid var(--color, hsla(0, 0%, 100%, 0.05));
+			outline: 3px solid var(--color, hsla(0, 0%, 100%, 0.025));
 		}
 		&.bug {
 			--background-color: rgba(149, 189, 45, 0.1);
@@ -541,6 +541,25 @@
 		.sidebar {
 			--bg-color: hsl(244, 16%, 15%);
 			--bg-color__sidebar: hsl(244, 16%, 18%);
+		}
+
+		#sidebar-search {
+			outline: 2px solid #ffffff13 !important;
+			&:focus,
+			&:active {
+				outline: 2px solid #ffffff33 !important;
+			}
+		}
+
+		.radio label,
+		.checkboxes label {
+			--background-color: #ffffff18;
+		}
+
+		.radio {
+			& > div {
+				border: 2px solid #ffffff0e;
+			}
 		}
 
 		.head {
